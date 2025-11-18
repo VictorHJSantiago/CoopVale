@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Editar Ponto de Retirada</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="nome" name="nome" value="{{ ponto.nome }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="endereco" class="form-label">Endereço</label>
+      <input type="text" class="form-control" id="endereco" name="endereco" value="{{ ponto.endereco }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="dias_funcionamento" class="form-label">Dias de Funcionamento</label>
+      <input type="text" class="form-control" id="dias_funcionamento" name="dias_funcionamento" value="{{ ponto.dias_funcionamento }}">
+    </div>
+    <div class="mb-3">
+      <label for="horarios" class="form-label">Horários</label>
+      <input type="text" class="form-control" id="horarios" name="horarios" value="{{ ponto.horarios }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Atualizar</button>
+    <a href="{{ url_for('admin_bp.listar_pontos') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

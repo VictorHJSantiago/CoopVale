@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Cadastro</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="mb-3">
+      <label for="senha" class="form-label">Senha</label>
+      <input type="password" class="form-control" id="senha" name="senha" required>
+    </div>
+    <div class="mb-3">
+      <label for="tipo_usuario" class="form-label">Tipo de Usuário</label>
+      <select class="form-select" id="tipo_usuario" name="tipo_usuario" required>
+        <option value="cliente">Cliente</option>
+        <option value="produtor">Produtor</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="nome" name="nome" required>
+    </div>
+    <button type="submit" class="btn btn-success">Cadastrar</button>
+    <a href="{{ url_for('auth.login') }}" class="btn btn-link">Já tenho conta</a>
+  </form>
+</div>
+{% endblock %}

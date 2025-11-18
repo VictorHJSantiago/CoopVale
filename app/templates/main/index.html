@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron mt-4">
+  <h1 class="display-4">Bem-vindo à CoopVale!</h1>
+  <p class="lead">A Cooperativa de Produtores Rurais do Vale Verde conectando você ao melhor da produção local.</p>
+  <hr class="my-4">
+  <a class="btn btn-success btn-lg" href="{{ url_for('produtos_bp.catalogo') }}" role="button">Ver Catálogo</a>
+</div>
+{% endblock %}

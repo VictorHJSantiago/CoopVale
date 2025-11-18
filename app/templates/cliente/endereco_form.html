@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if endereco %}Editar Endereço{% else %}Novo Endereço{% endif %}</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="apelido" class="form-label">Apelido</label>
+            <input type="text" class="form-control" id="apelido" name="apelido" value="{{ endereco.apelido if endereco else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="logradouro" class="form-label">Logradouro</label>
+            <input type="text" class="form-control" id="logradouro" name="logradouro" required value="{{ endereco.logradouro if endereco else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="numero" class="form-label">Número</label>
+            <input type="text" class="form-control" id="numero" name="numero" value="{{ endereco.numero if endereco else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="complemento" class="form-label">Complemento</label>
+            <input type="text" class="form-control" id="complemento" name="complemento" value="{{ endereco.complemento if endereco else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="bairro" class="form-label">Bairro</label>
+            <input type="text" class="form-control" id="bairro" name="bairro" value="{{ endereco.bairro if endereco else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="cidade" class="form-label">Cidade</label>
+            <input type="text" class="form-control" id="cidade" name="cidade" required value="{{ endereco.cidade if endereco else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="estado" class="form-label">Estado</label>
+            <input type="text" class="form-control" id="estado" name="estado" maxlength="2" required value="{{ endereco.estado if endereco else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="cep" class="form-label">CEP</label>
+            <input type="text" class="form-control" id="cep" name="cep" required value="{{ endereco.cep if endereco else '' }}">
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="principal" name="principal" {% if endereco and endereco.principal %}checked{% endif %}>
+            <label class="form-check-label" for="principal">Endereço principal</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('cliente_bp.enderecos') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

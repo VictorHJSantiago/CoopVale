@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Dashboard do Produtor</h2>
+  {% if erro %}
+    <div class="alert alert-danger">{{ erro }}</div>
+  {% else %}
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Produtos Cadastrados</h5>
+            <p class="card-text display-4">{{ produtos|length }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Pedidos Recebidos</h5>
+            <p class="card-text display-4">{{ pedidos|length }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Total em Vendas</h5>
+            <p class="card-text display-4">R$ {{ '%.2f'|format(total_vendas) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h4>Seus Produtos</h4>
+    <ul>
+      {% for produto in produtos %}
+      <li>{{ produto.nome }} (Estoque: {{ produto.estoque }})</li>
+      {% endfor %}
+    </ul>
+    <h4>Pedidos com seus produtos</h4>
+    <ul>
+      {% for pedido in pedidos %}
+      <li>Pedido #{{ pedido.id }} - {{ pedido.status }} - {{ pedido.data.strftime('%d/%m/%Y') }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}

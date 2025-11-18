@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Detalhes do Pedido #{{ pedido.id }}</h2>
+  <p><strong>Data:</strong> {{ pedido.data.strftime('%d/%m/%Y %H:%M') }}</p>
+  <p><strong>Status:</strong> {{ pedido.status }}</p>
+  <p><strong>Forma de Pagamento:</strong> {{ pedido.forma_pagamento }}</p>
+  <p><strong>Tipo de Recebimento:</strong> {{ pedido.tipo_recebimento }}</p>
+  <p><strong>Data Agendada:</strong> {{ pedido.data_agendada.strftime('%d/%m/%Y') if pedido.data_agendada else '-' }}</p>
+  <p><strong>Observações:</strong> {{ pedido.observacoes or '-' }}</p>
+  <h4>Itens do Pedido</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Preço Unitário</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in pedido.itens %}
+      <tr>
+        <td>{{ item.produto.nome }}</td>
+        <td>{{ item.quantidade }}</td>
+        <td>R$ {{ '%.2f'|format(item.preco_unitario) }}</td>
+        <td>R$ {{ '%.2f'|format(item.preco_unitario * item.quantidade) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="mb-3">
+    <strong>Total: R$ {{ '%.2f'|format(pedido.total) }}</strong>
+  </div>
+  <a href="{{ url_for('pedidos_bp.historico') }}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

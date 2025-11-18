@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Nova Categoria</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="nome" name="nome" required>
+    </div>
+    <div class="mb-3">
+      <label for="descricao" class="form-label">Descrição</label>
+      <input type="text" class="form-control" id="descricao" name="descricao">
+    </div>
+    <div class="mb-3">
+      <label for="icone" class="form-label">Ícone</label>
+      <input type="text" class="form-control" id="icone" name="icone">
+    </div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{{ url_for('produtos_bp.listar_categorias') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

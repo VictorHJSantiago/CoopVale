@@ -1,11 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
+from app.extensions import db
 from datetime import datetime
-from flask_login import UserMixin # Recomendado pelo RNF01 para autenticação
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash 
 
-# Instância do banco de dados (geralmente criada aqui ou no __init__.py e importada)
-db = SQLAlchemy()
-
-# --- Entidades Core ---
+# --- Entidades Core (Seção 5 do Plano de Ação) ---
 
 class Usuario(db.Model, UserMixin):
     __tablename__ = 'usuarios'
@@ -17,9 +15,17 @@ class Usuario(db.Model, UserMixin):
     tipo_usuario = db.Column(db.String(50), nullable=False, default='visitante') 
     ativo = db.Column(db.Boolean, default=True)
 
-    # Relacionamentos 1:1 (One-to-One)
+    # Relacionamentos 1:1 com Produtor e Cliente
     produtor_perfil = db.relationship('Produtor', backref='usuario', uselist=False, lazy=True)
     cliente_perfil = db.relationship('Cliente', backref='usuario', uselist=False, lazy=True)
+
+    def set_senha(self, senha): 
+        # RNF04: Cria o hash da senha usando bcrypt
+        self.senha_hash = generate_password_hash(senha)
+
+    def check_senha(self, senha): 
+        # RNF04: Verifica a senha fornecida com o hash
+        return check_password_hash(self.senha_hash, senha)
 
     def __repr__(self):
         return f'<Usuario {self.email}>'
@@ -29,16 +35,16 @@ class Produtor(db.Model):
     __tablename__ = 'produtores'
     
     id = db.Column(db.Integer, primary_key=True)
-    # Chave estrangeira ligando ao Usuário (1:1)
+    # Relacionamento 1:1 com Usuario
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), unique=True, nullable=False)
     
     nome = db.Column(db.String(150), nullable=False)
     cpf = db.Column(db.String(14), unique=True, nullable=False)
     telefone = db.Column(db.String(20))
     endereco = db.Column(db.Text)
-    certificacoes = db.Column(db.Text) # Pode ser texto livre ou lista separada por vírgulas
+    certificacoes = db.Column(db.Text) 
     
-    # Relacionamento 1:N (Um produtor tem vários produtos)
+    # Relacionamento 1:N: Produtor tem vários Produtos
     produtos = db.relationship('Produto', backref='produtor', lazy=True)
 
     def __repr__(self):
@@ -49,15 +55,16 @@ class Cliente(db.Model):
     __tablename__ = 'clientes'
     
     id = db.Column(db.Integer, primary_key=True)
-    # Chave estrangeira ligando ao Usuário (1:1)
+    # Relacionamento 1:1 com Usuario
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), unique=True, nullable=False)
     
     nome = db.Column(db.String(150), nullable=False)
     cpf = db.Column(db.String(14), unique=True, nullable=False)
     telefone = db.Column(db.String(20))
-    enderecos = db.Column(db.Text) # Pode ser melhorado criando uma tabela separada de endereços futuramente
+    # RF09.3: Endereços salvos (armazenado como texto simples/JSON por enquanto)
+    enderecos = db.Column(db.Text) 
     
-    # Relacionamento 1:N (Um cliente faz vários pedidos)
+    # Relacionamento 1:N: Cliente faz vários Pedidos
     pedidos = db.relationship('Pedido', backref='cliente', lazy=True)
 
     def __repr__(self):
@@ -68,11 +75,11 @@ class Categoria(db.Model):
     __tablename__ = 'categorias'
     
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100), nullable=False)
+    nome = db.Column(db.String(100), nullable=False, unique=True)
     descricao = db.Column(db.Text)
-    icone = db.Column(db.String(100)) # Caminho da imagem ou classe de ícone (ex: fontawesome)
+    icone = db.Column(db.String(100)) 
     
-    # Relacionamento 1:N (Uma categoria tem vários produtos)
+    # Relacionamento 1:N: Categoria tem vários Produtos
     produtos = db.relationship('Produto', backref='categoria', lazy=True)
 
     def __repr__(self):
@@ -85,12 +92,12 @@ class Produto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(150), nullable=False)
     descricao = db.Column(db.Text)
-    preco = db.Column(db.Float, nullable=False) # Considere usar Decimal para valores monetários em produção
-    unidade = db.Column(db.String(20)) # ex: kg, un, l
+    preco = db.Column(db.Float, nullable=False) 
+    unidade = db.Column(db.String(20)) # RF03.1: ex: kg, un, l
     estoque = db.Column(db.Float, default=0.0)
-    imagens = db.Column(db.Text) # Caminhos das imagens separados por ; ou JSON
+    imagens = db.Column(db.Text) # RF03.2: Caminhos das imagens (separados por ;)
     
-    # Chaves Estrangeiras
+    # Chaves Estrangeiras para Produtor e Categoria
     produtor_id = db.Column(db.Integer, db.ForeignKey('produtores.id'), nullable=False)
     categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
@@ -104,8 +111,12 @@ class PontoRetirada(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(150), nullable=False)
     endereco = db.Column(db.Text, nullable=False)
+    # RF06.2: Dias e horários de funcionamento
     dias_funcionamento = db.Column(db.String(100))
     horarios = db.Column(db.String(100))
+
+    def __repr__(self):
+        return f'<PontoRetirada {self.nome}>'
 
 
 class Pedido(db.Model):
@@ -113,13 +124,19 @@ class Pedido(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(50), default='Aguardando confirmação') # RF05.1
+    # RF05.1: Status do pedido
+    status = db.Column(db.String(50), default='Aguardando confirmação') 
+    # RF04.4: Forma de pagamento
     forma_pagamento = db.Column(db.String(50))
-    tipo_recebimento = db.Column(db.String(50)) # Entrega ou Retirada
+    # RF04.5: Tipo de recebimento (Entrega ou Retirada)
+    tipo_recebimento = db.Column(db.String(50)) 
     total = db.Column(db.Float, default=0.0)
     
     cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id'), nullable=False)
     
+    # Adicional para RF04.6 (Agendamento)
+    data_agendada = db.Column(db.DateTime) 
+
     # Relacionamento 1:N com ItemPedido
     itens = db.relationship('ItemPedido', backref='pedido', lazy=True)
 
@@ -132,13 +149,13 @@ class ItemPedido(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     quantidade = db.Column(db.Float, nullable=False)
-    preco_unitario = db.Column(db.Float, nullable=False) # Preço no momento da compra
+    preco_unitario = db.Column(db.Float, nullable=False) 
     
     pedido_id = db.Column(db.Integer, db.ForeignKey('pedidos.id'), nullable=False)
     produto_id = db.Column(db.Integer, db.ForeignKey('produtos.id'), nullable=False)
     
-    # Relacionamento para acessar os dados do produto a partir do item
-    produto = db.relationship('Produto')
+    # Relacionamento para acessar os dados do produto a partir do item (necessário para RF05.3 - Divisão por produtor)
+    produto = db.relationship('Produto') 
 
     def __repr__(self):
-        return f'<Item {self.produto.nome} x {self.quantidade}>'
+        return f'<Item ProdutoID:{self.produto_id} x {self.quantidade}>'

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Editar Produtor</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="nome" name="nome" value="{{ produtor.nome }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="cpf" class="form-label">CPF</label>
+      <input type="text" class="form-control" id="cpf" name="cpf" value="{{ produtor.cpf }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="telefone" class="form-label">Telefone</label>
+      <input type="text" class="form-control" id="telefone" name="telefone" value="{{ produtor.telefone }}">
+    </div>
+    <div class="mb-3">
+      <label for="endereco" class="form-label">Endereço</label>
+      <input type="text" class="form-control" id="endereco" name="endereco" value="{{ produtor.endereco }}">
+    </div>
+    <div class="mb-3">
+      <label for="certificacoes" class="form-label">Certificações</label>
+      <input type="text" class="form-control" id="certificacoes" name="certificacoes" value="{{ produtor.certificacoes }}">
+    </div>
+    <div class="mb-3">
+      <label for="descricao" class="form-label">Descrição</label>
+      <textarea class="form-control" id="descricao" name="descricao">{{ produtor.descricao }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="fotos" class="form-label">Fotos (URLs separadas por vírgula)</label>
+      <input type="text" class="form-control" id="fotos" name="fotos" value="{{ produtor.fotos }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Atualizar</button>
+    <a href="{{ url_for('produtores_bp.listar_produtores') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

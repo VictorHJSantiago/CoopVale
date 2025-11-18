@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Meus Endereços</h2>
+    <a href="{{ url_for('cliente_bp.novo_endereco') }}" class="btn btn-success mb-3">Novo Endereço</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Apelido</th>
+                <th>Endereço</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>CEP</th>
+                <th>Principal</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for endereco in enderecos %}
+            <tr>
+                <td>{{ endereco.apelido }}</td>
+                <td>{{ endereco.logradouro }}, {{ endereco.numero }} {{ endereco.complemento }}</td>
+                <td>{{ endereco.cidade }}</td>
+                <td>{{ endereco.estado }}</td>
+                <td>{{ endereco.cep }}</td>
+                <td>{% if endereco.principal %}<span class="badge bg-primary">Principal</span>{% endif %}</td>
+                <td>
+                    <a href="{{ url_for('cliente_bp.editar_endereco', endereco_id=endereco.id) }}" class="btn btn-sm btn-warning">Editar</a>
+                    <form action="{{ url_for('cliente_bp.excluir_endereco', endereco_id=endereco.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Excluir este endereço?');">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

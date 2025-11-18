@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Meus Favoritos</h2>
+  {% if produtos %}
+  <div class="row">
+    {% for produto in produtos %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        {% if produto.imagens %}
+        <img src="{{ url_for('static', filename=produto.imagens.split(',')[0]) }}" class="card-img-top" alt="Imagem do produto">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ produto.nome }}</h5>
+          <p class="card-text">{{ produto.descricao }}</p>
+          <form action="{{ url_for('cliente_bp.remover_favorito', produto_id=produto.id) }}" method="post">
+            <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="alert alert-info">Nenhum produto favorito.</div>
+  {% endif %}
+</div>
+{% endblock %}

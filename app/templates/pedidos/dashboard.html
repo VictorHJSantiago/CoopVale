@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Dashboard do Cliente</h2>
+  {% if erro %}
+    <div class="alert alert-danger">{{ erro }}</div>
+  {% else %}
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card text-white bg-info mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Pedidos Realizados</h5>
+            <p class="card-text display-4">{{ total_pedidos }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card text-white bg-success mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Total Gasto</h5>
+            <p class="card-text display-4">R$ {{ '%.2f'|format(total_gasto) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h4>Seus Pedidos</h4>
+    <ul>
+      {% for pedido in pedidos %}
+      <li>Pedido #{{ pedido.id }} - {{ pedido.status }} - {{ pedido.data.strftime('%d/%m/%Y') }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}

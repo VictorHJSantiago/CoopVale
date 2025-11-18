@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Carrinho de Compras</h2>
+  {% if produtos %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Subtotal</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in produtos %}
+      <tr>
+        <td>{{ item.produto.nome }}</td>
+        <td>
+          <form action="{{ url_for('pedidos_bp.atualizar_carrinho', produto_id=item.produto.id) }}" method="post" class="d-inline-flex align-items-center">
+            <input type="number" name="quantidade" value="{{ item.quantidade }}" min="1" max="{{ item.produto.estoque }}" class="form-control form-control-sm" style="width:70px;">
+            <button type="submit" class="btn btn-sm btn-primary ml-1">Atualizar</button>
+          </form>
+        </td>
+        <td>R$ {{ '%.2f'|format(item.subtotal) }}</td>
+        <td>
+          <form action="{{ url_for('pedidos_bp.remover_do_carrinho', produto_id=item.produto.id) }}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-sm btn-danger">Remover</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="mb-3">
+    <strong>Total: R$ {{ '%.2f'|format(total) }}</strong>
+  </div>
+  <a href="{{ url_for('pedidos_bp.finalizar_pedido') }}" class="btn btn-success">Finalizar Pedido</a>
+  {% else %}
+  <div class="alert alert-info">Seu carrinho está vazio.</div>
+  {% endif %}
+</div>
+{% endblock %}

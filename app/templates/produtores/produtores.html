@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Produtores</h2>
+  <a href="{{ url_for('produtores_bp.novo_produtor') }}" class="btn btn-success mb-3">Novo Produtor</a>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>Telefone</th>
+        <th>Endereço</th>
+        <th>Certificações</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for produtor in produtores %}
+      <tr>
+        <td>{{ produtor.nome }}</td>
+        <td>{{ produtor.cpf }}</td>
+        <td>{{ produtor.telefone }}</td>
+        <td>{{ produtor.endereco }}</td>
+        <td>{{ produtor.certificacoes }}</td>
+        <td>
+          <a href="{{ url_for('produtores_bp.editar_produtor', id=produtor.id) }}" class="btn btn-sm btn-primary">Editar</a>
+          <form action="{{ url_for('produtores_bp.excluir_produtor', id=produtor.id) }}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Excluir este produtor?')">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

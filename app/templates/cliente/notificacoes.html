@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Notificações</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Mensagem</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for n in notificacoes %}
+            <tr {% if not n.lida %}class="table-warning"{% endif %}>
+                <td>{{ n.mensagem }}</td>
+                <td>{{ n.criada_em.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{% if n.lida %}Lida{% else %}Nova{% endif %}</td>
+                <td>
+                    {% if not n.lida %}
+                    <form action="{{ url_for('cliente_bp.ler_notificacao', notificacao_id=n.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-primary">Marcar como lida</button>
+                    </form>
+                    {% endif %}
+                    <form action="{{ url_for('cliente_bp.excluir_notificacao', notificacao_id=n.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Excluir esta notificação?');">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

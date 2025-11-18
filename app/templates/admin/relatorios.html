@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Relatórios</h2>
+  <h4>Produtos Mais Vendidos</h4>
+  <ul>
+    {% for produto in produtos_mais_vendidos %}
+    <li>{{ produto.nome }} (Estoque atual: {{ produto.estoque }})</li>
+    {% endfor %}
+  </ul>
+  <h4>Produtores</h4>
+  <ul>
+    {% for produtor in produtores %}
+    <li>{{ produtor.nome }} - {{ produtor.certificacoes }}</li>
+    {% endfor %}
+  </ul>
+  <h4>Pedidos</h4>
+  <ul>
+    {% for pedido in pedidos %}
+    <li>Pedido #{{ pedido.id }} - {{ pedido.status }} - R$ {{ '%.2f'|format(pedido.total) }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Finalizar Pedido</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="forma_pagamento" class="form-label">Forma de Pagamento</label>
+      <select class="form-select" id="forma_pagamento" name="forma_pagamento" required>
+        <option value="dinheiro">Dinheiro</option>
+        <option value="pix">PIX</option>
+        <option value="cartao">Cartão na Entrega</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="tipo_recebimento" class="form-label">Tipo de Recebimento</label>
+      <select class="form-select" id="tipo_recebimento" name="tipo_recebimento" required>
+        <option value="retirada">Retirada</option>
+        <option value="entrega">Entrega</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="data_agendada" class="form-label">Data Agendada</label>
+      <input type="date" class="form-control" id="data_agendada" name="data_agendada">
+    </div>
+    <div class="mb-3">
+      <label for="observacoes" class="form-label">Observações</label>
+      <textarea class="form-control" id="observacoes" name="observacoes"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Confirmar Pedido</button>
+    <a href="{{ url_for('pedidos_bp.carrinho') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

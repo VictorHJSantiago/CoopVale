@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Dashboard Administrativo</h2>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card text-white bg-success mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Produtores</h5>
+          <p class="card-text display-4">{{ total_produtores }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Clientes</h5>
+          <p class="card-text display-4">{{ total_clientes }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Produtos</h5>
+          <p class="card-text display-4">{{ total_produtos }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-danger mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Pedidos</h5>
+          <p class="card-text display-4">{{ total_pedidos }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-primary mt-4">
+    Pedidos pendentes: <strong>{{ pedidos_pendentes }}</strong>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Vendas do Dia</h5>
+          <p class="card-text">R$ {{ '%.2f'|format(vendas_diario) }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Vendas da Semana</h5>
+          <p class="card-text">R$ {{ '%.2f'|format(vendas_semana) }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Vendas do Mês</h5>
+          <p class="card-text">R$ {{ '%.2f'|format(vendas_mes) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <h4>Produtos Mais Vendidos</h4>
+      <table class="table table-sm">
+        <thead><tr><th>Produto</th><th>Qtd</th></tr></thead>
+        <tbody>
+        {% for nome, qtd in mais_vendidos %}
+        <tr><td>{{ nome }}</td><td>{{ qtd }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-6">
+      <h4>Top Produtores (Faturamento)</h4>
+      <table class="table table-sm">
+        <thead><tr><th>Produtor</th><th>Faturamento</th></tr></thead>
+        <tbody>
+        {% for nome, fat in desempenho_produtores %}
+        <tr><td>{{ nome }}</td><td>R$ {{ '%.2f'|format(fat) }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <h4>Faturamento por Categoria</h4>
+      <canvas id="graficoCategorias" height="80"></canvas>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('graficoCategorias').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [{% for nome, fat in faturamento_categorias %}'{{ nome }}',{% endfor %}],
+      datasets: [{
+        label: 'Faturamento (R$)',
+        data: [{% for nome, fat in faturamento_categorias %}{{ fat }},{% endfor %}],
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
+</div>
+{% endblock %}
