@@ -5,10 +5,10 @@ Sistema web completo para gestão de cooperativa rural, com módulos de autentic
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/Flask-2.x-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask" />
-<img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-<img src="https://img.shields.io/badge/SQLite-3-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
-<img src="https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap" />
+<img src="https://img.shields.io/badge/Flask-2.x-2E7D32?style=for-the-badge&logo=flask&logoColor=white" alt="Flask" />
+<img src="https://img.shields.io/badge/Python-3.10+-43A047?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+<img src="https://img.shields.io/badge/SQLite-3-1B5E20?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
+<img src="https://img.shields.io/badge/Bootstrap-5-66BB6A?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap" />
 
 <h1>🌱 CoopVale</h1>
 <p><em>Plataforma de e-commerce cooperativo com checkout PIX, cartões, webhooks, seeds e ferramentas de administração.</em></p>
@@ -29,7 +29,9 @@ Sistema web completo para gestão de cooperativa rural, com módulos de autentic
 	<a href="#contribuicao">Contribuição</a>
 </p>
 
-## Visão Geral
+## ✨ Visão Geral
+
+---
 
 CoopVale é uma aplicação Flask para gestão de pedidos, produtos e pagamentos em uma cooperativa, com suporte a:
 - Cadastro e edição de perfil com CPF e foto de perfil.
@@ -40,7 +42,9 @@ CoopVale é uma aplicação Flask para gestão de pedidos, produtos e pagamentos
 - Seeds para categorias, logística (pontos e 27 taxas de entrega), e dados de exemplo.
 - Scripts CLI para expiração de PIX, verificação de pagamentos e geração de chave de criptografia.
 
-## Recursos
+## 🚀 Recursos
+
+---
 
 - Checkout moderno: Seleção de método, máscaras de cartão e alternância dinâmica de campos.
 - PIX: QR Code e código EMV para copia/cola (modo simulado). Automatiza confirmação via webhook.
@@ -51,7 +55,9 @@ CoopVale é uma aplicação Flask para gestão de pedidos, produtos e pagamentos
 - Seeds: Categorias com mínimos, logística (pontos + 27 taxas), produtos e usuários de exemplo.
 - CLI: Expira PIX vencidos, verifica pagamentos, gera chaves.
 
-## Estrutura do Projeto
+## 🗂️ Estrutura do Projeto
+
+---
 
 ```
 config.py
@@ -84,7 +90,9 @@ app/
 			...
 ```
 
-## Instalação Rápida
+## ⚙️ Instalação Rápida
+
+---
 
 Pré-requisitos:
 - Python 3.10+ instalado.
@@ -113,38 +121,9 @@ python run.py
 
 Aplicação acessível em `http://localhost:5000` (a menos que configurado diferente).
 
-## Screenshots
+## 🔧 Configuração
 
-Adicione imagens em `docs/screenshots/` e GIFs em `docs/demos/`.
-
-Exemplos (substitua pelos seus arquivos reais):
-
-<div align="center">
-
-<img src="docs/screenshots/home.png" alt="Home" width="85%" />
-<br/>
-<img src="docs/screenshots/checkout_pix.png" alt="Checkout PIX" width="85%" />
-<br/>
-<img src="docs/screenshots/produtores.png" alt="Lista de Produtores" width="85%" />
-
-</div>
-
-### Demo (GIF)
-
-<div align="center">
-
-<img src="docs/demos/checkout_flow.gif" alt="Fluxo de Checkout" width="85%" />
-
-</div>
-
-Como gerar um GIF rapidamente no Windows:
-
-```bash
-# Use ShareX ou ScreenToGif
-# Exporte para docs/demos/checkout_flow.gif
-```
-
-## Configuração
+---
 
 Arquivo principal: `config.py`
 - `SQLALCHEMY_DATABASE_URI`: caminho para `instance/coopvale.db`.
@@ -155,7 +134,9 @@ Arquivo principal: `config.py`
 
 Sugestão: use um `.env` (há um `.env.example` se presente) para credenciais.
 
-## Pagamentos
+## 💳 Pagamentos
+
+---
 
 - PIX:
 	- Página `pagamento_pix.html` exibe QR Code e código “copia e cola”.
@@ -171,13 +152,17 @@ Serviços:
 - `app/services/criptografia_service.py`: Fernet, Luhn, detecção de bandeira, tokenização.
 - `app/services/email_service.py`: envio de e-mails.
 
-## Webhooks
+## 🔔 Webhooks
+
+---
 
 - Blueprint: `app/blueprints/webhooks/routes.py`.
 - Objetivo: receber eventos do gateway, validar assinatura, atualizar pedidos e notificar.
 - Produção: configure `WEBHOOK_URL` público e credenciais reais.
 
-## Banco de Dados
+## 🗃️ Banco de Dados
+
+---
 
 - SQLite em `instance/coopvale.db`. Persiste após reiniciar app/PC.
 - Migrações via Alembic/Flask-Migrate.
@@ -196,7 +181,9 @@ python init_db_completo.py completo
 
 Observação: isso apaga e recria tabelas (use com cuidado).
 
-## CLI
+## 🛠️ CLI
+
+---
 
 Comandos administrativos (registrados em `app/cli_commands.py`):
 - `expirar-pedidos-pix`: marca como vencidos pedidos PIX expirados.
@@ -211,12 +198,16 @@ python -m flask verificar-pagamentos
 python -m flask gerar-chave-criptografia
 ```
 
-## Seeds
+## 🌱 Seeds
+
+---
 
 - `run.py`: seeds básicos (categorias com mínimos, incluindo Verduras `quantidade_minima=2`).
 - `init_db_completo.py`: cria BD e insere categorias, usuários, produtores, produtos, pontos e 27 taxas de entrega.
 
-## Testes
+## ✅ Testes
+
+---
 
 Suite de testes baseada em `pytest`.
 
@@ -226,7 +217,9 @@ pytest -q
 
 Status atual: 27 testes passando (com um aviso de depreciação do `Query.get`).
 
-## CI & Badges
+## 🧪 CI & Badges
+
+---
 
 Badges de status (exemplos com Shields.io):
 
@@ -247,14 +240,18 @@ Cobertura:
 - Badge acima usa Codecov. Para repositório privado, cadastre o projeto no Codecov e defina `CODECOV_TOKEN` nos segredos do repositório.
 - Workflow `coverage.yml` já envia `coverage.xml` para o Codecov.
 
-## Roadmap
+## 🗺️ Roadmap
+
+---
 
 - Integração completa com Mercado Pago em produção.
 - Tokenização de cartões via SDK JS (front-end).
 - PIX com geração EMV e CRC-16 oficiais.
 - Mais casos de teste e hardening de segurança.
 
-## Contribuição
+## 🤝 Contribuição
+
+---
 
 Contribuições são bem-vindas! Por favor:
 - Abra uma issue descrevendo a proposta.
