@@ -4,6 +4,9 @@ from datetime import datetime
 from app.extensions import db
 from app.models.core import Produto, Pedido, ItemPedido, Cliente, PontoRetirada, TaxaEntrega
 from . import pedidos_bp
+import io
+import base64
+import hashlib
 
 @pedidos_bp.route('/carrinho', endpoint='carrinho')
 @login_required
@@ -176,8 +179,27 @@ def finalizar_pedido():
         
         pedido.valor_frete = frete
         pedido.total = total + frete
+        
+        # Armazenar dados do pagamento
+        forma_pgto = request.form['forma_pagamento']
+        if forma_pgto in ['cartao_credito', 'cartao_debito']:
+            # Armazenar dados do cartão (em produção: criptografar ou usar tokenização)
+            numero_cartao = request.form.get('numero_cartao', '')
+            nome_cartao = request.form.get('nome_cartao', '')
+            validade_cartao = request.form.get('validade_cartao', '')
+            cvv_cartao = request.form.get('cvv_cartao', '')
+            # Adicionar nas observações (apenas para demonstração - NÃO FAZER EM PRODUÇÃO!)
+            mascara_cartao = '**** **** **** ' + numero_cartao.replace(' ', '')[-4:]
+            obs_cartao = f" | Cartão: {mascara_cartao}, Nome: {nome_cartao}, Validade: {validade_cartao}"
+            pedido.observacoes = (pedido.observacoes or '') + obs_cartao
+        
         db.session.commit()
         session['carrinho'] = {}
+        
+        # Se for PIX, redirecionar para página de pagamento
+        if forma_pgto == 'pix':
+            return redirect(url_for('pedidos.pagamento_pix', pedido_id=pedido.id))
+        
         flash('Pedido realizado com sucesso!', 'success')
         return redirect(url_for('pedidos.historico'))
         
@@ -297,6 +319,37 @@ def excluir_taxa(id):
     flash('Taxa de entrega excluída!', 'danger')
     return redirect(url_for('pedidos.listar_taxas'))
 
+@pedidos_bp.route('/pagamento/pix/<int:pedido_id>', endpoint='pagamento_pix')
+@login_required
+def pagamento_pix(pedido_id):
+    """
+    Exibe página de pagamento PIX com QR Code
+    Usa PagamentoService para gerar PIX via Mercado Pago ou simulado
+    """
+    pedido = db.session.get(Pedido, pedido_id)
+    if not pedido:
+        abort(404)
+    if pedido.cliente.usuario_id != current_user.id:
+        flash('Acesso não autorizado.', 'danger')
+        return redirect(url_for('pedidos.historico'))
+    
+    # Gerar pagamento PIX
+    from app.services.pagamento_service import PagamentoService
+    pagamento_service = PagamentoService()
+    
+    try:
+        dados_pix = pagamento_service.criar_pagamento_pix(pedido)
+        
+        return render_template('pedidos/pagamento_pix.html', 
+                             pedido=pedido, 
+                             codigo_pix=dados_pix['codigo_pix'],
+                             qr_code_url=dados_pix['qr_code_url'],
+                             simulado=dados_pix.get('simulado', False))
+    except Exception as e:
+        current_app.logger.error(f'Erro ao gerar pagamento PIX: {e}')
+        flash('Erro ao gerar pagamento PIX. Tente novamente.', 'danger')
+        return redirect(url_for('pedidos.historico'))
+
 @pedidos_bp.route('/historico', endpoint='historico')
 @login_required
 def historico():
@@ -360,6 +413,27 @@ def cancelar_pedido(pedido_id):
         item.produto.estoque += item.quantidade
     db.session.commit()
     flash('Pedido cancelado com sucesso.', 'info')
+    return redirect(url_for('pedidos.historico'))
+
+@pedidos_bp.route('/pedido/<int:pedido_id>/excluir', methods=['POST'], endpoint='excluir_pedido')
+@login_required
+def excluir_pedido(pedido_id):
+    pedido = db.session.get(Pedido, pedido_id)
+    if not pedido:
+        abort(404)
+    if pedido.cliente.usuario_id != current_user.id:
+        flash('Acesso não autorizado.', 'danger')
+        return redirect(url_for('pedidos.historico'))
+    # Só pode excluir se estiver cancelado
+    if pedido.status != 'Cancelado':
+        flash('Apenas pedidos cancelados podem ser excluídos.', 'warning')
+        return redirect(url_for('pedidos.historico'))
+    # Excluir itens do pedido primeiro (relacionamento)
+    for item in pedido.itens:
+        db.session.delete(item)
+    db.session.delete(pedido)
+    db.session.commit()
+    flash('Pedido excluído permanentemente.', 'info')
     return redirect(url_for('pedidos.historico'))
 
 @pedidos_bp.route('/comprovante/<int:pedido_id>/pdf', endpoint='comprovante_pdf')

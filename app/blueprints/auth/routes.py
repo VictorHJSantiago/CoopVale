@@ -96,3 +96,45 @@ def reset_password(token):
         return redirect(url_for('auth.login'))
         
     return render_template('auth/reset_password.html', token=token)
+
+@auth_bp.route('/perfil', methods=['GET', 'POST'], endpoint='perfil')
+@login_required
+def perfil():
+    if request.method == 'POST':
+        cpf = request.form.get('cpf', '').strip()
+        # Validação: CPF deve conter apenas números
+        if cpf and not cpf.isdigit():
+            flash('CPF deve conter apenas números.', 'warning')
+            return redirect(url_for('auth.perfil'))
+        if cpf and len(cpf) != 11:
+            flash('CPF deve ter 11 dígitos.', 'warning')
+            return redirect(url_for('auth.perfil'))
+        
+        current_user.cpf = cpf if cpf else None
+        
+        # Upload de foto
+        from werkzeug.utils import secure_filename
+        import os
+        foto = request.files.get('foto_perfil')
+        if foto and foto.filename:
+            filename = secure_filename(foto.filename)
+            upload_folder = os.path.join(current_app.root_path, 'static', 'uploads', 'perfil')
+            os.makedirs(upload_folder, exist_ok=True)
+            filepath = os.path.join(upload_folder, f"{current_user.id}_{filename}")
+            foto.save(filepath)
+            current_user.foto_perfil = f"uploads/perfil/{current_user.id}_{filename}"
+        
+        db.session.commit()
+        flash('Perfil atualizado com sucesso!', 'success')
+        return redirect(url_for('auth.perfil'))
+    
+    # Gerar avatar aleatório se não houver foto
+    if not current_user.foto_perfil:
+        import hashlib
+        hash_email = hashlib.md5(current_user.email.encode()).hexdigest()
+        avatar_url = f"https://www.gravatar.com/avatar/{hash_email}?d=identicon&s=200"
+        avatar_gerado = avatar_url
+    else:
+        avatar_gerado = None
+    
+    return render_template('auth/perfil.html', avatar_gerado=avatar_gerado)

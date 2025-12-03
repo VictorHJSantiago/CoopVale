@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #28a745; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .pedido-info { background: white; padding: 15px; margin: 15px 0; border-left: 4px solid #28a745; }
+        .item { padding: 10px 0; border-bottom: 1px solid #eee; }
+        .total { font-size: 1.2em; font-weight: bold; color: #28a745; margin-top: 15px; }
+        .footer { text-align: center; padding: 20px; color: #666; font-size: 0.9em; }
+        .alerta { background: #fff3cd; padding: 15px; margin: 15px 0; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Pedido Confirmado!</h1>
+        </div>
+        <div class="content">
+            <p>Olá <strong>{{ pedido.cliente.nome }}</strong>,</p>
+            <p>Seu pedido foi recebido com sucesso!</p>
+            
+            <div class="pedido-info">
+                <h3>Detalhes do Pedido</h3>
+                <p><strong>Número:</strong> #{{ pedido.id }}</p>
+                <p><strong>Data:</strong> {{ pedido.data.strftime('%d/%m/%Y às %H:%M') }}</p>
+                <p><strong>Status:</strong> {{ pedido.status }}</p>
+                <p><strong>Forma de Pagamento:</strong> {{ pedido.forma_pagamento }}</p>
+            </div>
+
+            {% if pedido.forma_pagamento == 'pix' %}
+            <div class="alerta">
+                <strong>⏰ Atenção:</strong> Aguardando confirmação do pagamento PIX.<br>
+                <strong>Prazo:</strong> 30 minutos para realizar o pagamento.
+            </div>
+            {% endif %}
+
+            <h3>Itens do Pedido</h3>
+            {% for item in pedido.itens %}
+            <div class="item">
+                {{ item.quantidade }}x <strong>{{ item.produto.nome }}</strong> - 
+                R$ {{ '%.2f'|format(item.preco_unitario * item.quantidade) }}
+            </div>
+            {% endfor %}
+
+            <div class="total">
+                Total: R$ {{ '%.2f'|format(pedido.total) }}
+            </div>
+
+            <p>Em breve você receberá atualizações sobre seu pedido.</p>
+        </div>
+        <div class="footer">
+            <p>Atenciosamente,<br><strong>Equipe AgroFeira</strong></p>
+            <p style="font-size: 0.8em; color: #999;">Este é um email automático, não responda.</p>
+        </div>
+    </div>
+</body>
+</html>

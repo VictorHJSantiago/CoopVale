@@ -1,0 +1,45 @@
+# Ambientes Python
+venv/
+env/
+ENV/
+.venv
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Banco de dados SQLite
+# IMPORTANTE: Comentar a linha abaixo se quiser versionar o banco
+# instance/*.db
+
+# Arquivos de configuração sensíveis
+.env
+*.key
+*.pem
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Uploads
+app/static/uploads/
+
+# Logs
+*.log
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db

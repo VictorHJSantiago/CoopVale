@@ -1,6 +1,6 @@
 from flask import Flask
 from config import Config
-from app.extensions import db, login_manager, migrate, csrf
+from app.extensions import db, login_manager, migrate, csrf, mail
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -10,6 +10,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     csrf.init_app(app)
     login_manager.init_app(app)
+    mail.init_app(app)
 
     from app.models.core import Usuario
     @login_manager.user_loader
@@ -50,6 +51,25 @@ def create_app(config_class=Config):
 
     from app.blueprints.blog import blog_bp
     app.register_blueprint(blog_bp)
+
+    from app.blueprints.webhooks import webhooks_bp
+    app.register_blueprint(webhooks_bp, url_prefix='/webhooks')
+
+    # Registrar comandos CLI personalizados
+    from app.cli_commands import cli
+    app.cli.add_command(cli)
+
+    # Adicionar filtros personalizados
+    import hashlib
+    @app.template_filter('hash')
+    def hash_filter(text, method='md5'):
+        if method == 'md5':
+            return hashlib.md5(text.encode()).hexdigest()
+        return text
+
+    # Configuração de upload
+    app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2 MB máx
+    app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
     # Remover db.create_all() para usar migrações
 

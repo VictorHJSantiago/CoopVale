@@ -16,10 +16,11 @@ def app():
     with app.app_context():
         db.create_all()
         
-        # Seed minimal data for all tests
-        cat = Categoria(nome='Verduras', descricao='Verduras orgânicas', valor_minimo=10.0, quantidade_minima=2)
-        db.session.add(cat)
-        db.session.commit()
+        # Seed minimal data for all tests - verificar se já existe antes de criar
+        if not Categoria.query.filter_by(nome='Verduras').first():
+            cat = Categoria(nome='Verduras', descricao='Verduras orgânicas', valor_minimo=10.0, quantidade_minima=2)
+            db.session.add(cat)
+            db.session.commit()
         
         yield app
         

@@ -10,6 +10,8 @@ class Usuario(db.Model, UserMixin):
     senha_hash = db.Column(db.String(256), nullable=False)
     tipo_usuario = db.Column(db.String(50), nullable=False, default='visitante')
     ativo = db.Column(db.Boolean, default=True)
+    cpf = db.Column(db.String(14))
+    foto_perfil = db.Column(db.String(300))
     produtor_perfil = db.relationship('Produtor', backref='usuario', uselist=False, lazy=True)
     cliente_perfil = db.relationship('Cliente', backref='usuario', uselist=False, lazy=True)
 
@@ -146,6 +148,15 @@ class Pedido(db.Model):
     data_cancelamento = db.Column(db.DateTime)
     motivo_cancelamento = db.Column(db.Text)
     cancelado_por = db.Column(db.String(50))  # cliente, admin, sistema
+    # Campos de pagamento
+    pagamento_id = db.Column(db.String(100))  # ID do pagamento no gateway (Mercado Pago, etc)
+    status_pagamento = db.Column(db.String(50), default='pendente')  # pendente, aprovado, rejeitado, expirado, reembolsado
+    data_pagamento = db.Column(db.DateTime)  # Quando o pagamento foi confirmado
+    expiracao_pagamento = db.Column(db.DateTime)  # Quando o pagamento PIX expira
+    motivo_rejeicao = db.Column(db.Text)  # Motivo se pagamento foi rejeitado
+    token_cartao = db.Column(db.Text)  # Token criptografado do cartão (se aplicável)
+    ultimos_4_cartao = db.Column(db.String(4))  # Últimos 4 dígitos do cartão
+    bandeira_cartao = db.Column(db.String(50))  # Visa, Mastercard, etc
     itens = db.relationship('ItemPedido', backref='pedido', lazy=True)
     ponto_retirada = db.relationship('PontoRetirada', backref='pedidos', lazy=True)
     taxa_entrega = db.relationship('TaxaEntrega', backref='pedidos', lazy=True)

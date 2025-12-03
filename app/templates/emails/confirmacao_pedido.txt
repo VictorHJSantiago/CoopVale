@@ -1,0 +1,30 @@
+Confirmação de Pedido - AgroFeira
+
+Olá {{ pedido.cliente.nome }},
+
+Seu pedido foi recebido com sucesso!
+
+Detalhes do Pedido:
+-------------------
+Número do Pedido: #{{ pedido.id }}
+Data: {{ pedido.data.strftime('%d/%m/%Y %H:%M') }}
+Status: {{ pedido.status }}
+
+Forma de Pagamento: {{ pedido.forma_pagamento }}
+Total: R$ {{ '%.2f'|format(pedido.total) }}
+
+{% if pedido.forma_pagamento == 'pix' %}
+Atenção: Aguardando confirmação do pagamento PIX.
+Prazo: 30 minutos
+{% endif %}
+
+Itens:
+------
+{% for item in pedido.itens %}
+- {{ item.quantidade }}x {{ item.produto.nome }} - R$ {{ '%.2f'|format(item.preco_unitario * item.quantidade) }}
+{% endfor %}
+
+Em breve você receberá atualizações sobre seu pedido.
+
+Atenciosamente,
+Equipe AgroFeira

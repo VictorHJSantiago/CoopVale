@@ -1,0 +1,13 @@
+Pedido Cancelado - AgroFeira
+
+Olá {{ pedido.cliente.nome }},
+
+Seu pedido #{{ pedido.id }} foi cancelado.
+
+Data do Cancelamento: {{ pedido.data_cancelamento.strftime('%d/%m/%Y %H:%M') }}
+Motivo: {{ pedido.motivo_cancelamento or 'Não especificado' }}
+
+Se você tiver alguma dúvida, entre em contato conosco.
+
+Atenciosamente,
+Equipe AgroFeira

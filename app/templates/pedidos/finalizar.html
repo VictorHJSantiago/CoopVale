@@ -8,11 +8,42 @@
         <h4>Pagamento e Entrega</h4>
         <div class="mb-3">
           <label for="forma_pagamento" class="form-label">Forma de Pagamento</label>
-          <select class="form-select" id="forma_pagamento" name="forma_pagamento" required>
+          <select class="form-select" id="forma_pagamento" name="forma_pagamento" required onchange="togglePagamento()">
             <option value="dinheiro">Dinheiro</option>
             <option value="pix">PIX</option>
-            <option value="cartao">Cartão</option>
+            <option value="cartao_credito">Cartão de Crédito</option>
+            <option value="cartao_debito">Cartão de Débito</option>
           </select>
+        </div>
+        
+        <!-- Campos de Cartão -->
+        <div id="divCartao" style="display:none;" class="mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title">Dados do Cartão</h6>
+              <div class="row g-2">
+                <div class="col-12">
+                  <label for="numero_cartao" class="form-label">Número do Cartão</label>
+                  <input type="text" class="form-control" id="numero_cartao" name="numero_cartao" placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                <div class="col-12">
+                  <label for="nome_cartao" class="form-label">Nome no Cartão</label>
+                  <input type="text" class="form-control" id="nome_cartao" name="nome_cartao" placeholder="NOME COMO NO CARTÃO">
+                </div>
+                <div class="col-6">
+                  <label for="validade_cartao" class="form-label">Validade</label>
+                  <input type="text" class="form-control" id="validade_cartao" name="validade_cartao" placeholder="MM/AA" maxlength="5">
+                </div>
+                <div class="col-6">
+                  <label for="cvv_cartao" class="form-label">CVV</label>
+                  <input type="text" class="form-control" id="cvv_cartao" name="cvv_cartao" placeholder="123" maxlength="4">
+                </div>
+              </div>
+              <div class="form-text mt-2">
+                <i class="bi bi-lock"></i> Seus dados estão seguros e criptografados.
+              </div>
+            </div>
+          </div>
         </div>
         <div class="mb-3">
           <label for="tipo_recebimento" class="form-label">Tipo de Recebimento</label>
@@ -107,6 +138,25 @@
 </div>
 
 <script>
+function togglePagamento(){
+  var forma = document.getElementById('forma_pagamento').value;
+  var divCartao = document.getElementById('divCartao');
+  if (forma === 'cartao_credito' || forma === 'cartao_debito'){
+    divCartao.style.display = 'block';
+    // Tornar campos obrigatórios
+    document.getElementById('numero_cartao').required = true;
+    document.getElementById('nome_cartao').required = true;
+    document.getElementById('validade_cartao').required = true;
+    document.getElementById('cvv_cartao').required = true;
+  } else {
+    divCartao.style.display = 'none';
+    // Remover obrigatoriedade
+    document.getElementById('numero_cartao').required = false;
+    document.getElementById('nome_cartao').required = false;
+    document.getElementById('validade_cartao').required = false;
+    document.getElementById('cvv_cartao').required = false;
+  }
+}
 function toggleEntregaRetirada(){
   var tipo = document.getElementById('tipo_recebimento').value;
   var divR = document.getElementById('divRetirada');
@@ -142,6 +192,34 @@ document.addEventListener('DOMContentLoaded', function(){
   var subtotal = parseFloat(resumo.dataset.subtotal || '0');
   document.getElementById('label-subtotal').innerText = 'R$ ' + subtotal.toFixed(2);
   toggleEntregaRetirada();
+  togglePagamento();
+
+  // Máscaras de cartão
+  var numeroCartao = document.getElementById('numero_cartao');
+  if (numeroCartao) {
+    numeroCartao.addEventListener('input', function(e){
+      var v = e.target.value.replace(/\D/g, '').slice(0,16);
+      var formatted = v.match(/.{1,4}/g);
+      e.target.value = formatted ? formatted.join(' ') : v;
+    });
+  }
+  var validadeCartao = document.getElementById('validade_cartao');
+  if (validadeCartao) {
+    validadeCartao.addEventListener('input', function(e){
+      var v = e.target.value.replace(/\D/g, '').slice(0,4);
+      if (v.length >= 2) {
+        e.target.value = v.slice(0,2) + '/' + v.slice(2);
+      } else {
+        e.target.value = v;
+      }
+    });
+  }
+  var cvvCartao = document.getElementById('cvv_cartao');
+  if (cvvCartao) {
+    cvvCartao.addEventListener('input', function(e){
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0,4);
+    });
+  }
 
   // CEP: máscara e validação simples + ViaCEP auto-preenchimento
   var cepInput = document.getElementById('cep');

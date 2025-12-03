@@ -1,0 +1,23 @@
+Pagamento Confirmado - AgroFeira
+
+Olá {{ pedido.cliente.nome }},
+
+Ótimas notícias! Seu pagamento foi confirmado com sucesso! ✓
+
+Detalhes do Pedido:
+-------------------
+Número do Pedido: #{{ pedido.id }}
+Data do Pagamento: {{ pedido.data_pagamento.strftime('%d/%m/%Y %H:%M') }}
+Forma de Pagamento: {{ pedido.forma_pagamento }}
+Valor Pago: R$ {{ '%.2f'|format(pedido.total) }}
+
+Status: {{ pedido.status }}
+
+Seu pedido está sendo processado e em breve será enviado/disponibilizado para retirada.
+
+Você pode acompanhar o status do seu pedido a qualquer momento.
+
+Obrigado pela sua compra!
+
+Atenciosamente,
+Equipe AgroFeira

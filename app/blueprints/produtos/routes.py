@@ -17,10 +17,10 @@ def listar_produtos():
 @login_required
 def novo_produto():
     categorias = Categoria.query.order_by(Categoria.nome.asc()).all()
-    if not categorias:
-        flash('Nenhuma categoria cadastrada. Crie uma categoria antes de cadastrar produtos.', 'warning')
-        return redirect(url_for('produtos_bp.nova_categoria'))
     if request.method == 'POST':
+        if not categorias:
+            flash('Nenhuma categoria cadastrada. Crie uma categoria antes de cadastrar produtos.', 'warning')
+            return redirect(url_for('produtos_bp.nova_categoria'))
         produtor_id = current_user.produtor_perfil.id if current_user.produtor_perfil else None
         
         imagens_files = request.files.getlist('imagens')

@@ -3,6 +3,7 @@ Flask-SQLAlchemy
 Flask-Login
 Flask-WTF
 Flask-Migrate
+Flask-Mail
 Werkzeug
 Jinja2
 itsdangerous
@@ -11,6 +12,9 @@ click
 blinker
 colorama
 reportlab
+qrcode[pil]
+cryptography
+requests
 pytest
 pytest-flask
 pytest-cov

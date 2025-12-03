@@ -1,0 +1,12 @@
+Pagamento PIX Expirado - AgroFeira
+
+Olá {{ pedido.cliente.nome }},
+
+O prazo para pagamento do seu pedido #{{ pedido.id }} expirou.
+
+O pedido foi automaticamente cancelado e o estoque dos produtos foi restaurado.
+
+Se ainda tiver interesse, você pode fazer um novo pedido a qualquer momento.
+
+Atenciosamente,
+Equipe AgroFeira

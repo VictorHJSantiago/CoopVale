@@ -73,18 +73,26 @@
                 </ul>
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <span class="navbar-text me-3">
-                            Olá, {{ current_user.email }} ({{ current_user.tipo_usuario.capitalize() }})
-                        </span>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if current_user.foto_perfil %}
+                                <img src="{{ url_for('static', filename=current_user.foto_perfil) }}" alt="Perfil" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                            {% else %}
+                                {% set hash_email = current_user.email|hash('md5') %}
+                                <img src="https://www.gravatar.com/avatar/{{ hash_email }}?d=identicon&s=32" alt="Avatar" class="rounded-circle me-2" style="width: 32px; height: 32px;">
+                            {% endif %}
+                            <span>{{ current_user.email.split('@')[0] }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                            <li><a class="dropdown-item" href="{{ url_for('auth.perfil') }}">Editar Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">Sair</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item me-2">
                         <button class="theme-toggle" id="themeToggle" title="Alternar tema">
                             <span id="themeIcon">🌙</span>
                         </button>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-sm btn-outline-danger" href="{{ url_for('auth.logout') }}">Sair</a>
                     </li>
                     {% else %}
                     <li class="nav-item me-2">

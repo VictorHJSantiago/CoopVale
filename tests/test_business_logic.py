@@ -4,13 +4,13 @@ from datetime import datetime, timedelta
 from app.models.core import Pedido, ItemPedido, Produto, Categoria, Cliente, Usuario
 from app import db
 
-def test_categoria_minimo_valor(app, categoria):
+def test_categoria_minimo_valor(app):
     """Testar validação de valor mínimo por categoria."""
     with app.app_context():
         cat = Categoria.query.filter_by(nome='Verduras').first()
         assert cat is not None
         assert cat.valor_minimo == 10.0
-        assert cat.quantidade_minima == 2
+        assert cat.quantidade_minima == 2.0
 
 def test_cancelamento_prazo(app, cliente_user):
     """Testar regra de cancelamento dentro do prazo."""

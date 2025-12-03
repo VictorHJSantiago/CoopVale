@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body text-center">
+          <h3 class="card-title mb-4">
+            <i class="bi bi-qr-code" style="font-size: 2rem; color: #00adb5;"></i>
+            Pagamento via PIX
+          </h3>
+          
+          <div class="alert alert-info">
+            <strong>Pedido #{{ pedido.id }}</strong> criado com sucesso!<br>
+            Total: <strong>R$ {{ '%.2f'|format(pedido.total) }}</strong>
+          </div>
+
+          {% if simulado %}
+          <div class="alert alert-warning">
+            <i class="bi bi-info-circle"></i> <strong>Modo Simulado</strong> - Este é um PIX de teste para desenvolvimento.
+            Em produção, será gerado via Mercado Pago.
+          </div>
+          {% endif %}
+
+          <p class="mb-4">Escaneie o QR Code abaixo ou copie o código PIX para realizar o pagamento:</p>
+
+          <!-- QR Code gerado dinamicamente -->
+          <div class="mb-4">
+            <img src="{{ qr_code_url }}" alt="QR Code PIX" class="img-fluid" style="max-width: 300px; border: 2px solid #ddd; padding: 10px; background: white;">
+          </div>
+
+          <!-- Código PIX Copia e Cola -->
+          <div class="mb-4">
+            <label class="form-label fw-bold">Código PIX (Copia e Cola):</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="codigoPix" value="{{ codigo_pix }}" readonly>
+              <button class="btn btn-outline-primary" type="button" onclick="copiarPix()">
+                <i class="bi bi-clipboard"></i> Copiar
+              </button>
+            </div>
+          </div>
+
+          <div class="alert alert-warning">
+            <i class="bi bi-clock"></i> O pagamento deve ser realizado em até <strong>30 minutos</strong>.
+          </div>
+
+          <div class="d-grid gap-2">
+            <a href="{{ url_for('pedidos.detalhe_pedido', pedido_id=pedido.id) }}" class="btn btn-primary">Ver Detalhes do Pedido</a>
+            <a href="{{ url_for('pedidos.historico') }}" class="btn btn-outline-secondary">Voltar para Meus Pedidos</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-body">
+          <h6 class="card-title">Instruções:</h6>
+          <ol class="mb-0">
+            <li>Abra o aplicativo do seu banco</li>
+            <li>Escolha a opção PIX</li>
+            <li>Escaneie o QR Code ou cole o código acima</li>
+            <li>Confirme o pagamento de <strong>R$ {{ '%.2f'|format(pedido.total) }}</strong></li>
+            <li>Aguarde a confirmação automática</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copiarPix() {
+  var codigoPix = document.getElementById('codigoPix');
+  codigoPix.select();
+  codigoPix.setSelectionRange(0, 99999);
+  
+  navigator.clipboard.writeText(codigoPix.value).then(function() {
+    alert('Código PIX copiado para a área de transferência!');
+  }, function() {
+    document.execCommand('copy');
+    alert('Código PIX copiado!');
+  });
+}
+</script>
+{% endblock %}

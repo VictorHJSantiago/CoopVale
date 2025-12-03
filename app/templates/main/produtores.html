@@ -22,8 +22,15 @@
     {% for produtor in produtores %}
     <div class="col">
       <div class="card h-100 shadow-sm">
-        {% set foto = produtor.fotos.split(',')[0] if produtor.fotos %}
-        <img src="{{ url_for('static', filename=foto if foto else 'images/placeholders/produtor.jpg') }}" class="card-img-top" alt="{{ produtor.nome }}">
+        {% if produtor.usuario and produtor.usuario.foto_perfil %}
+          <img src="{{ url_for('static', filename=produtor.usuario.foto_perfil) }}" class="card-img-top" alt="{{ produtor.nome }}" style="height: 250px; object-fit: cover;">
+        {% elif produtor.usuario and produtor.usuario.email %}
+          {% set hash_email = produtor.usuario.email|hash('md5') %}
+          <img src="https://www.gravatar.com/avatar/{{ hash_email }}?d=identicon&s=400" class="card-img-top" alt="{{ produtor.nome }}" style="height: 250px; object-fit: cover;">
+        {% else %}
+          {% set foto = produtor.fotos.split(',')[0] if produtor.fotos %}
+          <img src="{{ url_for('static', filename=foto if foto else 'images/placeholders/produtor.jpg') }}" class="card-img-top" alt="{{ produtor.nome }}" style="height: 250px; object-fit: cover;">
+        {% endif %}
         <div class="card-body d-flex flex-column">
           <h5 class="card-title d-flex align-items-center justify-content-between">
             <span>{{ produtor.nome }}</span>
