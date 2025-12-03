@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container mt-4">
   <h2>Novo Produtor</h2>
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="nome" class="form-label">Nome</label>
       <input type="text" class="form-control" id="nome" name="nome" required>
@@ -28,8 +28,9 @@
       <textarea class="form-control" id="descricao" name="descricao"></textarea>
     </div>
     <div class="mb-3">
-      <label for="fotos" class="form-label">Fotos (URLs separadas por vírgula)</label>
-      <input type="text" class="form-control" id="fotos" name="fotos">
+      <label for="fotos" class="form-label">Fotos da Propriedade (até 10 imagens)</label>
+      <input type="file" class="form-control" id="fotos" name="fotos" accept="image/*" multiple>
+      <small class="form-text text-muted">Formatos aceitos: PNG, JPG, JPEG, GIF, WEBP. Máximo 10 fotos.</small>
     </div>
     <button type="submit" class="btn btn-success">Salvar</button>
     <a href="{{ url_for('produtores_bp.listar_produtores') }}" class="btn btn-secondary">Cancelar</a>

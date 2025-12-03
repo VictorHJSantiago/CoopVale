@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if ponto else 'Novo' }} Ponto de Retirada - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ 'Editar' if ponto else 'Novo' }} Ponto de Retirada</h2>
+    <form method="POST" class="mt-4">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome*</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{{ ponto.nome if ponto else '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="endereco" class="form-label">Endereço*</label>
+            <input type="text" class="form-control" id="endereco" name="endereco" value="{{ ponto.endereco if ponto else '' }}" required>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="cidade" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="cidade" name="cidade" value="{{ ponto.cidade if ponto else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="cep" class="form-label">CEP</label>
+                <input type="text" class="form-control" id="cep" name="cep" value="{{ ponto.cep if ponto else '' }}" placeholder="12345-678">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="dias_funcionamento" class="form-label">Dias de Funcionamento</label>
+            <input type="text" class="form-control" id="dias_funcionamento" name="dias_funcionamento" value="{{ ponto.dias_funcionamento if ponto else '' }}" placeholder="Seg-Sex">
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="horario_abertura" class="form-label">Horário Abertura</label>
+                <input type="time" class="form-control" id="horario_abertura" name="horario_abertura" value="{{ ponto.horario_abertura if ponto else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="horario_fechamento" class="form-label">Horário Fechamento</label>
+                <input type="time" class="form-control" id="horario_fechamento" name="horario_fechamento" value="{{ ponto.horario_fechamento if ponto else '' }}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('admin.pontos_retirada') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

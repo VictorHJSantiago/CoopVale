@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ 'Editar' if ponto else 'Novo' }} Ponto de Retirada</h2>
+  <form method="post">
+    <div class="mb-3">
+      <label class="form-label">Nome</label>
+      <input class="form-control" name="nome" value="{{ ponto.nome if ponto else '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Endereço</label>
+      <textarea class="form-control" name="endereco" required>{{ ponto.endereco if ponto else '' }}</textarea>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Cidade</label>
+        <input class="form-control" name="cidade" value="{{ ponto.cidade if ponto else '' }}">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">CEP</label>
+        <input class="form-control" name="cep" value="{{ ponto.cep if ponto else '' }}">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label class="form-label">Ativo</label>
+        <input type="checkbox" name="ativo" {% if ponto and ponto.ativo %}checked{% endif %}>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Dias de Funcionamento</label>
+        <input class="form-control" name="dias_funcionamento" value="{{ ponto.dias_funcionamento if ponto else '' }}" placeholder="Seg-Sex, Sábado">
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label">Abertura</label>
+        <input class="form-control" name="horario_abertura" value="{{ ponto.horario_abertura if ponto else '' }}" placeholder="08:00">
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label">Fechamento</label>
+        <input class="form-control" name="horario_fechamento" value="{{ ponto.horario_fechamento if ponto else '' }}" placeholder="18:00">
+      </div>
+    </div>
+    <button class="btn btn-success" type="submit">Salvar</button>
+    <a class="btn btn-secondary" href="{{ url_for('pedidos.listar_pontos') }}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

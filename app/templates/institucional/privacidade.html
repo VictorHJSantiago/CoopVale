@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Política de Privacidade - CoopVale{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Política de Privacidade</h1>
+    <p class="text-muted">Última atualização: {{ now.strftime('%d/%m/%Y') }}</p>
+
+    <section class="mt-4">
+        <h3>1. Informações que Coletamos</h3>
+        <p>Coletamos informações que você nos fornece diretamente ao:</p>
+        <ul>
+            <li>Criar uma conta (nome, email, telefone, endereço)</li>
+            <li>Realizar um pedido (dados de pagamento, endereço de entrega)</li>
+            <li>Entrar em contato conosco (mensagens, feedbacks)</li>
+            <li>Navegar em nosso site (cookies, logs de acesso)</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>2. Como Usamos Suas Informações</h3>
+        <p>Utilizamos as informações coletadas para:</p>
+        <ul>
+            <li>Processar e gerenciar seus pedidos</li>
+            <li>Comunicar sobre o status dos pedidos</li>
+            <li>Melhorar nossos serviços e experiência do usuário</li>
+            <li>Enviar ofertas e promoções (com seu consentimento)</li>
+            <li>Cumprir obrigações legais e regulatórias</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>3. Compartilhamento de Informações</h3>
+        <p>Não vendemos suas informações pessoais. Compartilhamos dados apenas:</p>
+        <ul>
+            <li>Com produtores parceiros para processamento de pedidos</li>
+            <li>Com provedores de pagamento para transações seguras</li>
+            <li>Com autoridades quando exigido por lei</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>4. Segurança dos Dados</h3>
+        <p>Implementamos medidas de segurança técnicas e organizacionais para proteger suas informações contra acesso não autorizado, alteração, divulgação ou destruição. Isso inclui criptografia SSL, controles de acesso e monitoramento contínuo.</p>
+    </section>
+
+    <section class="mt-4">
+        <h3>5. Seus Direitos</h3>
+        <p>De acordo com a LGPD (Lei Geral de Proteção de Dados), você tem direito a:</p>
+        <ul>
+            <li>Acessar seus dados pessoais</li>
+            <li>Corrigir dados incompletos ou incorretos</li>
+            <li>Solicitar a exclusão de seus dados</li>
+            <li>Revogar consentimento para uso de dados</li>
+            <li>Portabilidade dos dados</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>6. Cookies</h3>
+        <p>Utilizamos cookies para melhorar sua experiência de navegação, lembrar preferências e analisar o tráfego do site. Você pode desativar cookies nas configurações do navegador.</p>
+    </section>
+
+    <section class="mt-4">
+        <h3>7. Contato</h3>
+        <p>Para questões sobre esta política ou exercer seus direitos, entre em contato:</p>
+        <ul>
+            <li>Email: privacidade@coopvale.com.br</li>
+            <li>Telefone: (11) 3456-7890</li>
+        </ul>
+    </section>
+</div>
+{% endblock %}

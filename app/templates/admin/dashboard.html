@@ -38,6 +38,23 @@
   </div>
   <div class="alert alert-primary mt-4">
     Pedidos pendentes: <strong>{{ pedidos_pendentes }}</strong>
+  
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h3>Gerenciamento</h3>
+        <div class="list-group">
+          <a href="{{ url_for('admin.pontos_retirada') }}" class="list-group-item list-group-item-action">
+            <strong>Pontos de Retirada</strong> - Gerenciar locais de retirada
+          </a>
+          <a href="{{ url_for('admin.taxas_entrega') }}" class="list-group-item list-group-item-action">
+            <strong>Taxas de Entrega</strong> - Configurar taxas por região
+          </a>
+          <a href="{{ url_for('admin.relatorio_faturamento_produtor') }}" class="list-group-item list-group-item-action">
+            <strong>Relatório Financeiro</strong> - Faturamento por produtor
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="row mt-4">

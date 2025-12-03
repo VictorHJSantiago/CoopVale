@@ -15,6 +15,14 @@
       <label for="icone" class="form-label">Ícone</label>
       <input type="text" class="form-control" id="icone" name="icone" value="{{ categoria.icone }}">
     </div>
+    <div class="mb-3">
+      <label for="valor_minimo" class="form-label">Valor Mínimo (opcional)</label>
+      <input type="number" step="0.01" class="form-control" id="valor_minimo" name="valor_minimo" value="{{ categoria.valor_minimo }}">
+    </div>
+    <div class="mb-3">
+      <label for="quantidade_minima" class="form-label">Quantidade Mínima (opcional)</label>
+      <input type="number" step="0.01" class="form-control" id="quantidade_minima" name="quantidade_minima" value="{{ categoria.quantidade_minima }}">
+    </div>
     <button type="submit" class="btn btn-primary">Atualizar</button>
     <a href="{{ url_for('produtos_bp.listar_categorias') }}" class="btn btn-secondary">Cancelar</a>
   </form>

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Novo Post</h2>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="titulo" class="form-label">Título</label>
+      <input type="text" class="form-control" id="titulo" name="titulo" required>
+    </div>
+    <div class="mb-3">
+      <label for="categoria" class="form-label">Categoria</label>
+      <select class="form-select" id="categoria" name="categoria">
+        <option value="">--</option>
+        <option value="receitas">Receitas</option>
+        <option value="dicas">Dicas</option>
+        <option value="noticias">Notícias</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="resumo" class="form-label">Resumo</label>
+      <textarea class="form-control" id="resumo" name="resumo" rows="2"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="conteudo" class="form-label">Conteúdo (HTML permitido)</label>
+      <textarea class="form-control" id="conteudo" name="conteudo" rows="8" required></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="imagem_capa" class="form-label">Imagem de Capa</label>
+      <input type="file" class="form-control" id="imagem_capa" name="imagem_capa" accept="image/*">
+    </div>
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="publicado" name="publicado">
+      <label class="form-check-label" for="publicado">Publicar imediatamente</label>
+    </div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{{ url_for('blog.listar_posts') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

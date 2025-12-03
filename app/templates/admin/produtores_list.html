@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2>Produtores</h2>
+    <a class="btn btn-success" href="{{ url_for('admin.produtores_novo') }}">Novo Produtor</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Cidade</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in produtores %}
+        <tr>
+          <td>{{ p.nome }}</td>
+          <td>{{ p.cidade }}</td>
+          <td>{{ p.estado }}</td>
+          <td class="text-right">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.produtores_editar', id=p.id) }}">Editar</a>
+            <form action="{{ url_for('admin.produtores_excluir', id=p.id) }}" method="post" class="d-inline">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if not produtores %}
+  <div class="alert alert-info">Nenhum produtor cadastrado.</div>
+  {% endif %}
+</div>
+{% endblock %}

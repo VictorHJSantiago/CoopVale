@@ -1,13 +1,18 @@
-from app.models.core import Pedido, ItemPedido
+from flask import render_template, redirect, url_for, flash, request, session
+from flask_login import login_required, current_user
+from app.extensions import db
+from app.models.core import Cliente, Produto, Favorito, Endereco, Pedido, ItemPedido, Notificacao
+from . import cliente_bp
+
 # Rotas para recompra rápida
-@cliente_bp.route('/recompras')
+@cliente_bp.route('/recompras', endpoint='recompras')
 @login_required
 def recompras():
     cliente = Cliente.query.filter_by(usuario_id=current_user.id).first()
     pedidos = Pedido.query.filter_by(cliente_id=cliente.id).order_by(Pedido.data.desc()).all() if cliente else []
     return render_template('cliente/recompras.html', pedidos=pedidos)
 
-@cliente_bp.route('/recomprar/<int:pedido_id>', methods=['POST'])
+@cliente_bp.route('/recomprar/<int:pedido_id>', methods=['POST'], endpoint='recomprar')
 @login_required
 def recomprar(pedido_id):
     pedido = Pedido.query.get_or_404(pedido_id)
@@ -16,20 +21,19 @@ def recomprar(pedido_id):
     for item in pedido.itens:
         carrinho[str(item.produto_id)] = {'quantidade': item.quantidade}
     # Salvar no session
-    from flask import session
     session['carrinho'] = carrinho
     flash('Itens do pedido adicionados ao carrinho para recompra!', 'success')
     return redirect(url_for('pedidos_bp.carrinho'))
-from app.models.core import Notificacao
+
 # Rotas para notificações do cliente
-@cliente_bp.route('/notificacoes')
+@cliente_bp.route('/notificacoes', endpoint='notificacoes')
 @login_required
 def notificacoes():
     cliente = Cliente.query.filter_by(usuario_id=current_user.id).first()
     notificacoes = Notificacao.query.filter_by(cliente_id=cliente.id).order_by(Notificacao.criada_em.desc()).all() if cliente else []
     return render_template('cliente/notificacoes.html', notificacoes=notificacoes)
 
-@cliente_bp.route('/notificacoes/ler/<int:notificacao_id>', methods=['POST'])
+@cliente_bp.route('/notificacoes/ler/<int:notificacao_id>', methods=['POST'], endpoint='ler_notificacao')
 @login_required
 def ler_notificacao(notificacao_id):
     notificacao = Notificacao.query.get_or_404(notificacao_id)
@@ -37,7 +41,7 @@ def ler_notificacao(notificacao_id):
     db.session.commit()
     return redirect(url_for('cliente_bp.notificacoes'))
 
-@cliente_bp.route('/notificacoes/excluir/<int:notificacao_id>', methods=['POST'])
+@cliente_bp.route('/notificacoes/excluir/<int:notificacao_id>', methods=['POST'], endpoint='excluir_notificacao')
 @login_required
 def excluir_notificacao(notificacao_id):
     notificacao = Notificacao.query.get_or_404(notificacao_id)
@@ -45,20 +49,16 @@ def excluir_notificacao(notificacao_id):
     db.session.commit()
     flash('Notificação excluída.', 'info')
     return redirect(url_for('cliente_bp.notificacoes'))
-from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_required, current_user
-from app.extensions import db
-from app.models.core import Cliente, Produto, Favorito, Endereco
 
 # Rotas para endereços salvos do cliente
-@cliente_bp.route('/enderecos')
+@cliente_bp.route('/enderecos', endpoint='enderecos')
 @login_required
 def enderecos():
     cliente = Cliente.query.filter_by(usuario_id=current_user.id).first()
     enderecos = Endereco.query.filter_by(cliente_id=cliente.id).all() if cliente else []
     return render_template('cliente/enderecos.html', enderecos=enderecos)
 
-@cliente_bp.route('/enderecos/novo', methods=['GET', 'POST'])
+@cliente_bp.route('/enderecos/novo', methods=['GET', 'POST'], endpoint='novo_endereco')
 @login_required
 def novo_endereco():
     if request.method == 'POST':
@@ -96,7 +96,7 @@ def novo_endereco():
         return redirect(url_for('cliente_bp.enderecos'))
     return render_template('cliente/endereco_form.html', endereco=None)
 
-@cliente_bp.route('/enderecos/editar/<int:endereco_id>', methods=['GET', 'POST'])
+@cliente_bp.route('/enderecos/editar/<int:endereco_id>', methods=['GET', 'POST'], endpoint='editar_endereco')
 @login_required
 def editar_endereco(endereco_id):
     endereco = Endereco.query.get_or_404(endereco_id)
@@ -126,7 +126,7 @@ def editar_endereco(endereco_id):
         return redirect(url_for('cliente_bp.enderecos'))
     return render_template('cliente/endereco_form.html', endereco=endereco)
 
-@cliente_bp.route('/enderecos/excluir/<int:endereco_id>', methods=['POST'])
+@cliente_bp.route('/enderecos/excluir/<int:endereco_id>', methods=['POST'], endpoint='excluir_endereco')
 @login_required
 def excluir_endereco(endereco_id):
     endereco = Endereco.query.get_or_404(endereco_id)
@@ -134,17 +134,16 @@ def excluir_endereco(endereco_id):
     db.session.commit()
     flash('Endereço removido com sucesso.', 'info')
     return redirect(url_for('cliente_bp.enderecos'))
-from . import cliente_bp
 
-@cliente_bp.route('/favoritos')
+@cliente_bp.route('/favoritos', endpoint='favoritos')
 @login_required
 def favoritos():
     cliente = Cliente.query.filter_by(usuario_id=current_user.id).first()
     favoritos = Favorito.query.filter_by(cliente_id=cliente.id).all() if cliente else []
-    produtos = [Produto.query.get(fav.produto_id) for fav in favoritos]
+    produtos = [db.session.get(Produto, fav.produto_id) for fav in favoritos]
     return render_template('cliente/favoritos.html', produtos=produtos)
 
-@cliente_bp.route('/favoritos/adicionar/<int:produto_id>', methods=['POST'])
+@cliente_bp.route('/favoritos/adicionar/<int:produto_id>', methods=['POST'], endpoint='adicionar_favorito')
 @login_required
 def adicionar_favorito(produto_id):
     cliente = Cliente.query.filter_by(usuario_id=current_user.id).first()
@@ -158,7 +157,7 @@ def adicionar_favorito(produto_id):
         flash('Adicionado aos favoritos!', 'success')
     return redirect(request.referrer or url_for('produtos_bp.catalogo'))
 
-@cliente_bp.route('/favoritos/remover/<int:produto_id>', methods=['POST'])
+@cliente_bp.route('/favoritos/remover/<int:produto_id>', methods=['POST'], endpoint='remover_favorito')
 @login_required
 def remover_favorito(produto_id):
     cliente = Cliente.query.filter_by(usuario_id=current_user.id).first()

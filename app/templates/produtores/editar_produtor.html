@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container mt-4">
   <h2>Editar Produtor</h2>
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="nome" class="form-label">Nome</label>
       <input type="text" class="form-control" id="nome" name="nome" value="{{ produtor.nome }}" required>
@@ -27,10 +27,26 @@
       <label for="descricao" class="form-label">Descrição</label>
       <textarea class="form-control" id="descricao" name="descricao">{{ produtor.descricao }}</textarea>
     </div>
+    
+    {% if produtor.fotos %}
     <div class="mb-3">
-      <label for="fotos" class="form-label">Fotos (URLs separadas por vírgula)</label>
-      <input type="text" class="form-control" id="fotos" name="fotos" value="{{ produtor.fotos }}">
+      <label class="form-label">Fotos Atuais:</label>
+      <div class="row">
+        {% for foto in produtor.fotos.split(',') %}
+        <div class="col-md-3 mb-2">
+          <img src="{{ url_for('static', filename=foto) }}" class="img-thumbnail" alt="Foto da propriedade">
+        </div>
+        {% endfor %}
+      </div>
     </div>
+    {% endif %}
+    
+    <div class="mb-3">
+      <label for="fotos" class="form-label">Novas Fotos da Propriedade (até 10 imagens)</label>
+      <input type="file" class="form-control" id="fotos" name="fotos" accept="image/*" multiple>
+      <small class="form-text text-muted">Selecione novas fotos para substituir as atuais. Formatos aceitos: PNG, JPG, JPEG, GIF, WEBP.</small>
+    </div>
+    
     <button type="submit" class="btn btn-primary">Atualizar</button>
     <a href="{{ url_for('produtores_bp.listar_produtores') }}" class="btn btn-secondary">Cancelar</a>
   </form>

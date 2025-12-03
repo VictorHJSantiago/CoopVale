@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6">
+      {% set imgs = (produto.imagens.split(',') if produto.imagens else []) %}
+      {% if imgs %}
+        <div id="carouselProduto" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            {% for img in imgs %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+              <img src="{{ url_for('static', filename=img) }}" class="d-block w-100" alt="Imagem">
+            </div>
+            {% endfor %}
+          </div>
+          {% if imgs|length > 1 %}
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselProduto" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselProduto" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          </button>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      <h2>{{ produto.nome }}</h2>
+      {% if produto.preco_promocional %}
+          <h3>{{ produto.nome }}
+            <span class="badge bg-success">Promoção</span>
+            {% set hoje = namespace(val=datetime.now(timezone.utc)) %}
+            {% if produto.sazonal_inicio and produto.sazonal_fim and produto.sazonal_inicio <= hoje.val <= produto.sazonal_fim %}
+            <span class="badge bg-warning text-dark">Sazonal</span>
+            {% endif %}
+          </h3>
+        <p class="text-decoration-line-through">R$ {{ produto.preco|round(2) }}</p>
+        <h4 class="text-success">R$ {{ produto.preco_promocional|round(2) }}</h4>
+      {% else %}
+        <h4>R$ {{ produto.preco|round(2) }}</h4>
+      {% endif %}
+      <p><strong>Unidade:</strong> {{ produto.unidade }}</p>
+      <p><strong>Estoque:</strong> {{ produto.estoque }}</p>
+      <p><strong>Categoria:</strong> {{ produto.categoria.nome }}</p>
+      {% if produto.subcategoria %}<p><strong>Subcategoria:</strong> {{ produto.subcategoria }}</p>{% endif %}
+      <p><strong>Produtor:</strong> {{ produto.produtor.nome }}</p>
+      {% if produto.origem %}<p><strong>Origem:</strong> {{ produto.origem }}</p>{% endif %}
+      {% if produto.tags %}<p><strong>Tags:</strong> {{ produto.tags }}</p>{% endif %}
+      {% if produto.sazonal_inicio and produto.sazonal_fim %}
+      <p><span class="badge bg-warning text-dark">Sazonal</span> {{ produto.sazonal_inicio.strftime('%d/%m') }} - {{ produto.sazonal_fim.strftime('%d/%m') }}</p>
+      {% endif %}
+      <p>{{ produto.descricao }}</p>
+      {% if produto.informacoes_nutricionais %}
+      <h5>Informações Nutricionais</h5>
+      <p>{{ produto.informacoes_nutricionais }}</p>
+      {% endif %}
+      {% if current_user.is_authenticated %}
+      <form action="{{ url_for('pedidos.adicionar_carrinho', produto_id=produto.id) }}" method="post" class="d-flex gap-2 mb-3">
+        <input type="number" name="quantidade" value="1" min="1" class="form-control" style="max-width:100px;">
+        <button type="submit" class="btn btn-success">Adicionar ao Carrinho</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  
+  <hr class="my-4">
+  
+  <h4>Avaliações (Média: {{ '%.1f'|format(media_nota) }} ⭐)</h4>
+  
+  {% if current_user.is_authenticated and current_user.tipo_usuario == 'cliente' %}
+  <div class="card mb-3">
+    <div class="card-header">Avaliar Produto</div>
+    <div class="card-body">
+      <form action="{{ url_for('produtos_bp.avaliar_produto', produto_id=produto.id) }}" method="post">
+        <div class="mb-3">
+          <label for="nota" class="form-label">Nota (1-5)</label>
+          <select name="nota" id="nota" class="form-select" required>
+            <option value="5">5 - Excelente</option>
+            <option value="4">4 - Muito Bom</option>
+            <option value="3">3 - Bom</option>
+            <option value="2">2 - Regular</option>
+            <option value="1">1 - Ruim</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="comentario" class="form-label">Comentário</label>
+          <textarea name="comentario" id="comentario" class="form-control" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+  
+  <div class="list-group">
+    {% for r in reviews %}
+    <div class="list-group-item">
+      <div class="d-flex w-100 justify-content-between">
+        <h6 class="mb-1">{{ r.cliente.nome }}</h6>
+        <small>{{ r.criado_em.strftime('%d/%m/%Y') }}</small>
+      </div>
+      <p class="mb-1">
+        {% for i in range(r.nota) %}⭐{% endfor %}
+      </p>
+      {% if r.comentario %}
+      <p class="mb-1">{{ r.comentario }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  
+  <a href="{{ url_for('produtos_bp.catalogo') }}" class="btn btn-secondary mt-3">Voltar ao Catálogo</a>
+</div>
+{% endblock %}

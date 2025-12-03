@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Pontos de Retirada</h2>
+    <a class="btn btn-success" href="{{ url_for('pedidos.novo_ponto') }}">Novo Ponto</a>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nome</th><th>Endereço</th><th>Cidade</th><th>CEP</th><th>Ativo</th><th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pontos %}
+      <tr>
+        <td>{{ p.nome }}</td>
+        <td>{{ p.endereco }}</td>
+        <td>{{ p.cidade or '-' }}</td>
+        <td>{{ p.cep or '-' }}</td>
+        <td>{{ 'Sim' if p.ativo else 'Não' }}</td>
+        <td>
+          <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('pedidos.editar_ponto', id=p.id) }}">Editar</a>
+          <form action="{{ url_for('pedidos.excluir_ponto', id=p.id) }}" method="post" class="d-inline">
+            <button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if not pontos %}
+  <div class="alert alert-info">Nenhum ponto de retirada cadastrado.</div>
+  {% endif %}
+</div>
+{% endblock %}

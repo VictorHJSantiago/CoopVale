@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if taxa else 'Nova' }} Taxa de Entrega - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ 'Editar' if taxa else 'Nova' }} Taxa de Entrega</h2>
+    <form method="POST" class="mt-4">
+        <div class="mb-3">
+            <label for="regiao" class="form-label">Região*</label>
+            <input type="text" class="form-control" id="regiao" name="regiao" value="{{ taxa.regiao if taxa else '' }}" required placeholder="Ex: Centro, Zona Sul">
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="valor" class="form-label">Valor (R$)*</label>
+                <input type="number" class="form-control" id="valor" name="valor" value="{{ taxa.valor if taxa else '' }}" step="0.01" min="0" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="prazo_dias" class="form-label">Prazo (dias)</label>
+                <input type="number" class="form-control" id="prazo_dias" name="prazo_dias" value="{{ taxa.prazo_dias if taxa else 1 }}" min="1">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('admin.taxas_entrega') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

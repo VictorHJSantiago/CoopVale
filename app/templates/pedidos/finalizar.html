@@ -3,31 +3,196 @@
 <div class="container mt-4">
   <h2>Finalizar Pedido</h2>
   <form method="POST">
-    <div class="mb-3">
-      <label for="forma_pagamento" class="form-label">Forma de Pagamento</label>
-      <select class="form-select" id="forma_pagamento" name="forma_pagamento" required>
-        <option value="dinheiro">Dinheiro</option>
-        <option value="pix">PIX</option>
-        <option value="cartao">Cartão na Entrega</option>
-      </select>
+    <div class="row">
+      <div class="col-md-7">
+        <h4>Pagamento e Entrega</h4>
+        <div class="mb-3">
+          <label for="forma_pagamento" class="form-label">Forma de Pagamento</label>
+          <select class="form-select" id="forma_pagamento" name="forma_pagamento" required>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="pix">PIX</option>
+            <option value="cartao">Cartão</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="tipo_recebimento" class="form-label">Tipo de Recebimento</label>
+          <select class="form-select" id="tipo_recebimento" name="tipo_recebimento" required onchange="toggleEntregaRetirada()">
+            <option value="retirada">Retirada no Ponto</option>
+            <option value="entrega">Entrega no Endereço</option>
+          </select>
+        </div>
+
+        <div class="mb-3" id="divRetirada">
+          <label for="ponto_retirada_id" class="form-label">Selecione o Ponto de Retirada</label>
+          <select class="form-select" id="ponto_retirada_id" name="ponto_retirada_id">
+            <option value="">-- Selecione --</option>
+            {% for ponto in pontos_retirada %}
+            <option value="{{ ponto.id }}">{{ ponto.nome }} - {{ ponto.endereco }} {% if ponto.dias_funcionamento %} ({{ ponto.dias_funcionamento }}){% endif %}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3" id="divEntrega" style="display:none;">
+          <div class="row">
+            <div class="col-md-6">
+              <label for="taxa_entrega_id" class="form-label">Região/Taxa de Entrega</label>
+              <select class="form-select" id="taxa_entrega_id" name="taxa_entrega_id" onchange="atualizaFrete()">
+                <option value="">-- Selecione --</option>
+                {% for taxa in taxas_entrega %}
+                <option value="{{ taxa.id }}" data-valor="{{ '%.2f'|format(taxa.valor) }}">{{ taxa.regiao }} - R$ {{ '%.2f'|format(taxa.valor) }} ({{ taxa.prazo_dias }} dia{% if taxa.prazo_dias>1 %}s{% endif %})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="cep" class="form-label">CEP (opcional)</label>
+              <input type="text" class="form-control" id="cep" name="cep" placeholder="12345-678" pattern="^\d{5}-?\d{3}$" inputmode="numeric">
+              <div class="form-text">Formato: 12345-678 (aceita apenas números; hífen opcional)</div>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-6 mb-2">
+              <label for="endereco_rua" class="form-label">Rua (opcional)</label>
+              <input type="text" class="form-control" id="endereco_rua" name="endereco_rua" placeholder="Rua/Logradouro">
+            </div>
+            <div class="col-md-6 mb-2">
+              <label for="endereco_bairro" class="form-label">Bairro (opcional)</label>
+              <input type="text" class="form-control" id="endereco_bairro" name="endereco_bairro" placeholder="Bairro">
+            </div>
+            <div class="col-md-6 mb-2">
+              <label for="endereco_cidade" class="form-label">Cidade (opcional)</label>
+              <input type="text" class="form-control" id="endereco_cidade" name="endereco_cidade" placeholder="Cidade">
+            </div>
+            <div class="col-md-3 mb-2">
+              <label for="endereco_uf" class="form-label">UF (opcional)</label>
+              <input type="text" class="form-control" id="endereco_uf" name="endereco_uf" maxlength="2" placeholder="PR">
+            </div>
+            <div class="col-md-3 mb-2">
+              <label for="endereco_numero" class="form-label">Número (opcional)</label>
+              <input type="text" class="form-control" id="endereco_numero" name="endereco_numero" placeholder="Número">
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="data_agendada" class="form-label">Data Agendada (opcional)</label>
+          <input type="date" class="form-control" id="data_agendada" name="data_agendada">
+        </div>
+        <div class="mb-3">
+          <label for="observacoes" class="form-label">Observações</label>
+          <textarea class="form-control" id="observacoes" name="observacoes" placeholder="Instruções de entrega, observações..."></textarea>
+        </div>
+      </div>
+      
+      <div class="col-md-5">
+        <h4>Resumo</h4>
+        <ul class="list-group mb-3" id="resumo-valores" data-subtotal="{{ '%.2f'|format(subtotal or 0) }}">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Subtotal
+            <span id="label-subtotal">R$ --</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Frete
+            <span id="label-frete">R$ 0,00</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Total
+            <strong id="label-total">R$ --</strong>
+          </li>
+        </ul>
+        <button type="submit" class="btn btn-success btn-lg w-100">Confirmar Pedido</button>
+        <a href="{{ url_for('pedidos.carrinho') }}" class="btn btn-secondary w-100 mt-2">Voltar ao Carrinho</a>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="tipo_recebimento" class="form-label">Tipo de Recebimento</label>
-      <select class="form-select" id="tipo_recebimento" name="tipo_recebimento" required>
-        <option value="retirada">Retirada</option>
-        <option value="entrega">Entrega</option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="data_agendada" class="form-label">Data Agendada</label>
-      <input type="date" class="form-control" id="data_agendada" name="data_agendada">
-    </div>
-    <div class="mb-3">
-      <label for="observacoes" class="form-label">Observações</label>
-      <textarea class="form-control" id="observacoes" name="observacoes"></textarea>
-    </div>
-    <button type="submit" class="btn btn-success">Confirmar Pedido</button>
-    <a href="{{ url_for('pedidos_bp.carrinho') }}" class="btn btn-secondary">Cancelar</a>
   </form>
 </div>
+
+<script>
+function toggleEntregaRetirada(){
+  var tipo = document.getElementById('tipo_recebimento').value;
+  var divR = document.getElementById('divRetirada');
+  var divE = document.getElementById('divEntrega');
+  if (tipo === 'retirada'){
+    divR.style.display = 'block';
+    divE.style.display = 'none';
+  } else {
+    divR.style.display = 'none';
+    divE.style.display = 'block';
+  }
+  atualizaFrete();
+}
+function atualizaFrete(){
+  var tipo = document.getElementById('tipo_recebimento').value;
+  var frete = 0.0;
+  if (tipo === 'entrega'){
+    var sel = document.getElementById('taxa_entrega_id');
+    var opt = sel.options[sel.selectedIndex];
+    if (opt && opt.dataset && opt.dataset.valor){
+      frete = parseFloat(opt.dataset.valor.replace(',', '.')) || 0;
+    }
+  }
+  document.getElementById('label-frete').innerText = 'R$ ' + frete.toFixed(2);
+  var resumo = document.getElementById('resumo-valores');
+  var subtotal = parseFloat(resumo.dataset.subtotal || '0');
+  var total = subtotal + frete;
+  document.getElementById('label-total').innerText = 'R$ ' + total.toFixed(2);
+}
+document.addEventListener('DOMContentLoaded', function(){
+  // Inicializa valores
+  var resumo = document.getElementById('resumo-valores');
+  var subtotal = parseFloat(resumo.dataset.subtotal || '0');
+  document.getElementById('label-subtotal').innerText = 'R$ ' + subtotal.toFixed(2);
+  toggleEntregaRetirada();
+
+  // CEP: máscara e validação simples + ViaCEP auto-preenchimento
+  var cepInput = document.getElementById('cep');
+  if (cepInput) {
+    cepInput.addEventListener('input', function(e){
+      var v = e.target.value.replace(/[^0-9]/g, '').slice(0,8);
+      if (v.length > 5) {
+        e.target.value = v.slice(0,5) + '-' + v.slice(5);
+      } else {
+        e.target.value = v;
+      }
+    });
+    cepInput.addEventListener('blur', function(e){
+      var ok = /^\d{5}-\d{3}$/.test(e.target.value);
+      if (!ok && e.target.value.trim() !== '') {
+        e.target.classList.add('is-invalid');
+      } else {
+        e.target.classList.remove('is-invalid');
+        // ViaCEP auto-preenchimento
+        var cepNum = e.target.value.replace(/[^0-9]/g, '');
+        if (cepNum.length === 8) {
+          fetch('https://viacep.com.br/ws/' + cepNum + '/json/')
+            .then(function(r){ return r.json(); })
+            .then(function(data){
+              if (data && !data.erro) {
+                var rua = document.getElementById('endereco_rua');
+                var bairro = document.getElementById('endereco_bairro');
+                var cidade = document.getElementById('endereco_cidade');
+                var uf = document.getElementById('endereco_uf');
+                if (rua && !rua.value) rua.value = data.logradouro || '';
+                if (bairro && !bairro.value) bairro.value = data.bairro || '';
+                if (cidade && !cidade.value) cidade.value = data.localidade || '';
+                if (uf && !uf.value) uf.value = data.uf || '';
+                if (window.showToast) {
+                  window.showToast('Endereço preenchido via CEP.', 'info');
+                }
+              } else {
+                if (window.showToast) {
+                  window.showToast('CEP não encontrado.', 'warning');
+                }
+              }
+            })
+            .catch(function(){
+              if (window.showToast) {
+                window.showToast('Falha ao consultar CEP.', 'warning');
+              }
+            });
+        }
+      }
+    });
+  }
+});
+</script>
 {% endblock %}

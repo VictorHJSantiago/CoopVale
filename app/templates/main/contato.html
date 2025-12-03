@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container mt-4">
   <h2>Contato</h2>
-  <form>
+  <form method="POST" action="{{ url_for('main_bp.enviar_contato') }}">
     <div class="mb-3">
       <label for="nome" class="form-label">Nome</label>
       <input type="text" class="form-control" id="nome" name="nome" required>

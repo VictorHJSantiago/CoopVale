@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório de Faturamento por Produtor - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Relatório de Faturamento por Produtor</h2>
+    
+    <form method="GET" class="row g-3 mt-3">
+        <div class="col-md-3">
+            <label for="data_inicio" class="form-label">Data Início</label>
+            <input type="date" class="form-control" id="data_inicio" name="data_inicio" value="{{ data_inicio or '' }}">
+        </div>
+        <div class="col-md-3">
+            <label for="data_fim" class="form-label">Data Fim</label>
+            <input type="date" class="form-control" id="data_fim" name="data_fim" value="{{ data_fim or '' }}">
+        </div>
+        <div class="col-md-6 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="{{ url_for('admin.relatorio_faturamento_produtor') }}" class="btn btn-secondary ms-2">Limpar</a>
+            
+            {% if relatorio %}
+            <div class="ms-auto">
+                <a href="{{ url_for('admin.relatorio_faturamento_produtor', export='csv', data_inicio=data_inicio, data_fim=data_fim) }}" 
+                   class="btn btn-success">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Download CSV
+                </a>
+                <a href="{{ url_for('admin.relatorio_faturamento_produtor', export='pdf', data_inicio=data_inicio, data_fim=data_fim) }}" 
+                   class="btn btn-danger ms-2">
+                    <i class="bi bi-file-earmark-pdf"></i> Download PDF
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if relatorio %}
+    <div class="table-responsive mt-4">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Produtor</th>
+                    <th>Total Itens</th>
+                    <th>Faturamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total_geral = namespace(valor=0) %}
+                {% for prod in relatorio %}
+                {% set total_geral.valor = total_geral.valor + (prod.faturamento or 0) %}
+                <tr>
+                    <td>{{ prod.id }}</td>
+                    <td>{{ prod.nome }}</td>
+                    <td>{{ prod.total_itens }}</td>
+                    <td class="fw-bold text-success">R$ {{ "%.2f"|format(prod.faturamento or 0) }}</td>
+                </tr>
+                {% endfor %}
+                <tr class="table-info fw-bold">
+                    <td colspan="3" class="text-end">TOTAL GERAL:</td>
+                    <td>R$ {{ "%.2f"|format(total_geral.valor) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-4">Nenhum dado encontrado para o período selecionado.</div>
+    {% endif %}
+</div>
+{% endblock %}

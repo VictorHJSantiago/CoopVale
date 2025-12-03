@@ -17,14 +17,14 @@
       <tr>
         <td>{{ item.produto.nome }}</td>
         <td>
-          <form action="{{ url_for('pedidos_bp.atualizar_carrinho', produto_id=item.produto.id) }}" method="post" class="d-inline-flex align-items-center">
+          <form action="{{ url_for('pedidos.carrinho_atualizar', produto_id=item.produto.id) }}" method="post" class="d-inline-flex align-items-center">
             <input type="number" name="quantidade" value="{{ item.quantidade }}" min="1" max="{{ item.produto.estoque }}" class="form-control form-control-sm" style="width:70px;">
             <button type="submit" class="btn btn-sm btn-primary ml-1">Atualizar</button>
           </form>
         </td>
         <td>R$ {{ '%.2f'|format(item.subtotal) }}</td>
         <td>
-          <form action="{{ url_for('pedidos_bp.remover_do_carrinho', produto_id=item.produto.id) }}" method="post" style="display:inline;">
+          <form action="{{ url_for('pedidos.carrinho_remover', produto_id=item.produto.id) }}" method="post" style="display:inline;">
             <button type="submit" class="btn btn-sm btn-danger">Remover</button>
           </form>
         </td>
@@ -35,7 +35,7 @@
   <div class="mb-3">
     <strong>Total: R$ {{ '%.2f'|format(total) }}</strong>
   </div>
-  <a href="{{ url_for('pedidos_bp.finalizar_pedido') }}" class="btn btn-success">Finalizar Pedido</a>
+  <a href="{{ url_for('pedidos.finalizar_pedido') }}" class="btn btn-success">Finalizar Pedido</a>
   {% else %}
   <div class="alert alert-info">Seu carrinho está vazio.</div>
   {% endif %}

@@ -8,6 +8,11 @@
   <p><strong>Tipo de Recebimento:</strong> {{ pedido.tipo_recebimento }}</p>
   <p><strong>Data Agendada:</strong> {{ pedido.data_agendada.strftime('%d/%m/%Y') if pedido.data_agendada else '-' }}</p>
   <p><strong>Observações:</strong> {{ pedido.observacoes or '-' }}</p>
+  {% if pedido.entrega_tipo == 'entrega' and pedido.taxa_entrega %}
+  <p><strong>Entrega:</strong> {{ pedido.taxa_entrega.regiao }} - Prazo {{ pedido.taxa_entrega.prazo_dias }} dia{% if pedido.taxa_entrega.prazo_dias>1 %}s{% endif %} | Frete: R$ {{ '%.2f'|format(pedido.valor_frete or 0) }}</p>
+  {% elif pedido.entrega_tipo == 'retirada' and pedido.ponto_retirada %}
+  <p><strong>Ponto de Retirada:</strong> {{ pedido.ponto_retirada.nome }} - {{ pedido.ponto_retirada.endereco }}{% if pedido.ponto_retirada.dias_funcionamento %} ({{ pedido.ponto_retirada.dias_funcionamento }}){% endif %}</p>
+  {% endif %}
   <h4>Itens do Pedido</h4>
   <table class="table table-bordered">
     <thead>
@@ -30,8 +35,60 @@
     </tbody>
   </table>
   <div class="mb-3">
-    <strong>Total: R$ {{ '%.2f'|format(pedido.total) }}</strong>
+    {% if pedido.valor_frete %}
+    <div>Frete: <strong>R$ {{ '%.2f'|format(pedido.valor_frete) }}</strong></div>
+    {% endif %}
+    <div>Total: <strong>R$ {{ '%.2f'|format(pedido.total) }}</strong></div>
   </div>
-  <a href="{{ url_for('pedidos_bp.historico') }}" class="btn btn-secondary">Voltar</a>
+  <h4>Subtotal por Produtor</h4>
+  <table class="table table-sm table-striped">
+    <thead>
+      <tr>
+        <th>Produtor</th>
+        <th>Quantidade Total</th>
+        <th>Subtotal (R$)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for produtor_id, dados in mapa_produtores.items() %}
+      <tr>
+        <td>{{ dados.nome }}</td>
+        <td>{{ dados.quantidade }}</td>
+        <td>R$ {{ '%.2f'|format(dados.subtotal) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{{ url_for('pedidos.comprovante_pdf', pedido_id=pedido.id) }}" class="btn btn-outline-primary btn-sm">Download PDF Comprovante</a>
+  {% if pedido.status == 'Aguardando confirmação' %}
+  <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalCancelar">Cancelar Pedido</button>
+  {% endif %}
+  <a href="{{ url_for('pedidos.historico') }}" class="btn btn-secondary">Voltar</a>
+</div>
+
+<!-- Modal Cancelamento -->
+<div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="modalCancelarLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCancelarLabel">Cancelar Pedido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ url_for('pedidos.cancelar_pedido', pedido_id=pedido.id) }}" method="post">
+        <div class="modal-body">
+          <p>Tem certeza que deseja cancelar este pedido?</p>
+          <p class="text-muted small">Você só pode cancelar dentro de 1 hora após a criação e se o status for "Aguardando confirmação".</p>
+          <div class="mb-3">
+            <label for="motivo" class="form-label">Motivo (opcional)</label>
+            <textarea name="motivo" id="motivo" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="submit" class="btn btn-danger">Confirmar Cancelamento</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -1,0 +1,130 @@
+/* CoopVale Theme with Dark Mode Support */
+:root {
+  --coop-green: #1e7e34;
+  --coop-green-light: #27a844;
+  --coop-green-dark: #155724;
+  --coop-accent: #ffb347;
+  --coop-accent-dark: #ff9f2e;
+  --coop-bg: #f5f7f9;
+  --coop-bg-secondary: #ffffff;
+  --coop-text: #212529;
+  --coop-text-muted: #6c757d;
+  --coop-border: #dee2e6;
+  --coop-card-shadow: rgba(0,0,0,.06);
+  --coop-card-shadow-hover: rgba(0,0,0,.12);
+  --coop-border-radius: .65rem;
+  --coop-table-bg: #eef1f3;
+}
+
+[data-theme="dark"] {
+  --coop-green: #28a745;
+  --coop-green-light: #34ce57;
+  --coop-green-dark: #1e7e34;
+  --coop-accent: #ffc266;
+  --coop-accent-dark: #ffb347;
+  --coop-bg: #1a1d23;
+  --coop-bg-secondary: #242831;
+  --coop-text: #e9ecef;
+  --coop-text-muted: #adb5bd;
+  --coop-border: #3a3f4b;
+  --coop-card-shadow: rgba(0,0,0,.3);
+  --coop-card-shadow-hover: rgba(0,0,0,.5);
+  --coop-table-bg: #2c3038;
+}
+
+* { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+body { 
+  background: var(--coop-bg); 
+  color: var(--coop-text);
+}
+.navbar-nav { list-style: none; margin: 0; padding: 0; }
+.navbar-nav .nav-item { display: inline-block; }
+.navbar-nav .nav-link { text-decoration: none; }
+.navbar-toggler-icon { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0,0,0,.7)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); }
+.navbar-brand { font-weight:700; }
+.navbar.bg-light, .footer { 
+  background: var(--coop-bg-secondary)!important; 
+  border-color: var(--coop-border)!important;
+}
+.card { 
+  background: var(--coop-bg-secondary); 
+  color: var(--coop-text);
+  border: 1px solid var(--coop-border); 
+  border-radius: var(--coop-border-radius); 
+  transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease; 
+}
+.card:hover { 
+  transform: translateY(-4px); 
+  box-shadow:0 .75rem 1.75rem var(--coop-card-shadow-hover); 
+}
+.btn-success { 
+  background: var(--coop-green); 
+  border-color: var(--coop-green); 
+}
+.btn-success:hover { 
+  background: var(--coop-green-light); 
+  border-color: var(--coop-green-light); 
+}
+.badge.bg-success { background: var(--coop-green)!important; }
+.badge.bg-warning { background: var(--coop-accent)!important; color: #000; }
+.table { color: var(--coop-text); }
+.table thead th { background: var(--coop-table-bg); border-color: var(--coop-border); }
+.table td, .table th { border-color: var(--coop-border); }
+.footer { font-size:.9rem; }
+.form-control, .form-select { 
+  background: var(--coop-bg-secondary); 
+  color: var(--coop-text); 
+  border: 1px solid var(--coop-border); 
+  border-radius: var(--coop-border-radius); 
+}
+.form-control:focus, .form-select:focus {
+  background: var(--coop-bg-secondary);
+  color: var(--coop-text);
+  border-color: var(--coop-green);
+  box-shadow: 0 0 0 .2rem rgba(30, 126, 52, .15);
+}
+.text-muted { color: var(--coop-text-muted)!important; }
+.alert { border-radius: var(--coop-border-radius); }
+img.rounded { border-radius: var(--coop-border-radius)!important; }
+
+/* Theme Toggle */
+.theme-toggle {
+  background: var(--coop-bg-secondary);
+  border: 1px solid var(--coop-border);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.theme-toggle:hover {
+  background: var(--coop-green);
+  color: #fff;
+  transform: rotate(15deg);
+}
+
+/* Enhanced cards */
+.card-img-top {
+  object-fit: cover;
+  height: 180px;
+  border-top-left-radius: var(--coop-border-radius);
+  border-top-right-radius: var(--coop-border-radius);
+}
+
+/* Utility */
+.shadow-soft { box-shadow:0 .25rem .75rem var(--coop-card-shadow); }
+.text-accent { color: var(--coop-accent); }
+.gradient-accent {
+  background: linear-gradient(135deg, var(--coop-green) 0%, var(--coop-green-light) 100%);
+  color: #fff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn .4s ease; }

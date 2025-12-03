@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2>Meus Produtos</h2>
+    <a class="btn btn-success" href="{{ url_for('produtos_bp.novo_produto') }}">Novo Produto</a>
+  </div>
+  <div class="row">
+    {% for p in produtos %}
+    <div class="col-md-4 mb-3">
+      <div class="card h-100">
+        {% set img = (p.imagens.split(',')[0] if p.imagens) %}
+        {% if img %}<img src="{{ url_for('static', filename=img) }}" class="card-img-top" alt="">{% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ p.nome }}</h5>
+          <p class="card-text">R$ {{ p.preco|round(2) }} / {{ p.unidade }}</p>
+          <div class="d-flex gap-2">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('produtos_bp.editar_produto', id=p.id) }}">Editar</a>
+            <form action="{{ url_for('produtos_bp.excluir_produto', id=p.id) }}" method="post" class="d-inline">
+              <button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if not produtos %}
+  <div class="alert alert-info">Nenhum produto cadastrado.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Mensagens de Contato</h2>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <a href="{{ url_for('admin.contatos', filtro='todos') }}" class="btn btn-sm {% if filtro!='novos' %}btn-primary{% else %}btn-outline-primary{% endif %}">Todos</a>
+      <a href="{{ url_for('admin.contatos', filtro='novos') }}" class="btn btn-sm {% if filtro=='novos' %}btn-primary{% else %}btn-outline-primary{% endif %}">Novos</a>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Mensagem</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in contatos %}
+      <tr>
+        <td>{{ c.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td>{{ c.nome }}</td>
+        <td><a href="mailto:{{ c.email }}">{{ c.email }}</a></td>
+        <td style="max-width:420px">{{ c.mensagem }}</td>
+        <td>
+          {% if c.respondido %}
+          <span class="badge bg-success">Respondido</span>
+          {% else %}
+          <span class="badge bg-warning text-dark">Novo</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if not c.respondido %}
+          <form method="POST" action="{{ url_for('admin.responder_contato', id=c.id, filtro=filtro) }}" style="display:inline">
+            <button type="submit" class="btn btn-sm btn-success">Marcar respondido</button>
+          </form>
+          {% endif %}
+          <form method="POST" action="{{ url_for('admin.excluir_contato', id=c.id, filtro=filtro) }}" style="display:inline" onsubmit="return confirm('Excluir a mensagem?')">
+            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="text-center">Nenhuma mensagem encontrada.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

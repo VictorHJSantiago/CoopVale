@@ -39,6 +39,32 @@
       <label for="tags" class="form-label">Tags</label>
       <input type="text" class="form-control" id="tags" name="tags" placeholder="orgânico, artesanal, etc.">
     </div>
+    <div class="mb-3">
+      <label for="subcategoria" class="form-label">Subcategoria</label>
+      <input type="text" class="form-control" id="subcategoria" name="subcategoria" placeholder="Ex: folhosas, queijos, doces">
+    </div>
+    <div class="mb-3">
+      <label for="origem" class="form-label">Origem</label>
+      <input type="text" class="form-control" id="origem" name="origem" placeholder="Propriedade, localidade, etc.">
+    </div>
+    <div class="mb-3">
+      <label for="informacoes_nutricionais" class="form-label">Informações Nutricionais</label>
+      <textarea class="form-control" id="informacoes_nutricionais" name="informacoes_nutricionais" placeholder="Calorias, vitaminas..."></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="preco_promocional" class="form-label">Preço Promocional (opcional)</label>
+      <input type="number" step="0.01" class="form-control" id="preco_promocional" name="preco_promocional" placeholder="Digite se houver promoção">
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="sazonal_inicio" class="form-label">Início Sazonal (YYYY-MM-DD)</label>
+        <input type="date" class="form-control" id="sazonal_inicio" name="sazonal_inicio">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="sazonal_fim" class="form-label">Fim Sazonal (YYYY-MM-DD)</label>
+        <input type="date" class="form-control" id="sazonal_fim" name="sazonal_fim">
+      </div>
+    </div>
     <button type="submit" class="btn btn-success">Salvar</button>
     <a href="{{ url_for('produtos_bp.listar_produtos') }}" class="btn btn-secondary">Cancelar</a>
   </form>

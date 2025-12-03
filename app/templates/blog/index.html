@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Blog CoopVale</h2>
+  {% if current_user.is_authenticated and current_user.tipo_usuario in ['produtor','admin'] %}
+  <div class="mb-3">
+    <a class="btn btn-success" href="{{ url_for('blog.novo_produtor_post') }}">Nova Matéria</a>
+  </div>
+  {% endif %}
+  <form method="GET" class="mb-3">
+    <select name="categoria" class="form-select" onchange="this.form.submit()">
+      <option value="">Todas as categorias</option>
+      {% for cat in ['receitas','dicas','noticias'] %}
+      <option value="{{ cat }}" {% if categoria_selecionada == cat %}selected{% endif %}>{{ cat|capitalize }}</option>
+      {% endfor %}
+    </select>
+  </form>
+  <div class="row">
+    {% for post in posts %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        {% if post.imagem_capa %}
+        <img src="{{ url_for('static', filename=post.imagem_capa) }}" class="card-img-top" alt="Imagem de capa">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ post.titulo }}</h5>
+          <p class="card-text">{{ post.resumo or post.conteudo[:120] ~ '...' }}</p>
+          <a href="{{ url_for('blog.ver_post', slug=post.slug) }}" class="btn btn-sm btn-outline-success">Ler mais</a>
+        </div>
+        <div class="card-footer text-muted">
+          <small>{{ post.categoria|capitalize }} • {{ post.criado_em.strftime('%d/%m/%Y') }}</small>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="col-12"><div class="alert alert-info">Nenhum post publicado ainda.</div></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

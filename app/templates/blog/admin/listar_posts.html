@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Gerenciar Posts do Blog</h2>
+  <a href="{{ url_for('blog.novo_post') }}" class="btn btn-success mb-3">Novo Post</a>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Slug</th>
+        <th>Categoria</th>
+        <th>Publicado</th>
+        <th>Criado</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in posts %}
+      <tr>
+        <td>{{ post.titulo }}</td>
+        <td>{{ post.slug }}</td>
+        <td>{{ post.categoria or '-' }}</td>
+        <td>{% if post.publicado %}<span class="badge bg-success">Sim</span>{% else %}<span class="badge bg-secondary">Não</span>{% endif %}</td>
+        <td>{{ post.criado_em.strftime('%d/%m/%Y') }}</td>
+        <td>
+          <a href="{{ url_for('blog.editar_post', id=post.id) }}" class="btn btn-sm btn-primary">Editar</a>
+          <form method="POST" action="{{ url_for('blog.excluir_post', id=post.id) }}" style="display:inline" onsubmit="return confirm('Excluir este post?')">
+            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+          </form>
+          {% if post.publicado %}
+          <a href="{{ url_for('blog.ver_post', slug=post.slug) }}" class="btn btn-sm btn-outline-secondary">Ver</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

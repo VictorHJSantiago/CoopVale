@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Termos de Uso - CoopVale{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Termos de Uso</h1>
+    <p class="text-muted">Última atualização: {{ now.strftime('%d/%m/%Y') }}</p>
+
+    <section class="mt-4">
+        <h3>1. Aceitação dos Termos</h3>
+        <p>Ao acessar e usar a plataforma CoopVale, você concorda com estes Termos de Uso. Se não concordar, não utilize nossos serviços.</p>
+    </section>
+
+    <section class="mt-4">
+        <h3>2. Descrição do Serviço</h3>
+        <p>A CoopVale é uma plataforma de marketplace que conecta produtores de alimentos orgânicos com consumidores. Facilitamos a venda, mas não somos responsáveis pela produção ou qualidade dos produtos.</p>
+    </section>
+
+    <section class="mt-4">
+        <h3>3. Cadastro e Conta</h3>
+        <ul>
+            <li>Você deve fornecer informações precisas e atualizadas</li>
+            <li>É responsável por manter a confidencialidade de sua senha</li>
+            <li>Deve ter pelo menos 18 anos para criar uma conta</li>
+            <li>Não deve compartilhar sua conta com terceiros</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>4. Pedidos e Pagamentos</h3>
+        <ul>
+            <li>Os preços estão sujeitos a alterações sem aviso prévio</li>
+            <li>Confirmamos pedidos por email após pagamento aprovado</li>
+            <li>Cancelamentos devem ser feitos em até 1 hora após o pedido</li>
+            <li>Não nos responsabilizamos por atrasos de terceiros (bancos, operadoras)</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>5. Política de Devolução e Reembolso</h3>
+        <ul>
+            <li>Produtos perecíveis não podem ser devolvidos por questões sanitárias</li>
+            <li>Em caso de defeito ou produto errado, entre em contato em até 24h</li>
+            <li>Reembolsos são processados em até 7 dias úteis</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>6. Conduta do Usuário</h3>
+        <p>Você concorda em NÃO:</p>
+        <ul>
+            <li>Usar a plataforma para atividades ilegais</li>
+            <li>Publicar conteúdo ofensivo, difamatório ou enganoso</li>
+            <li>Tentar acessar áreas restritas ou comprometer a segurança</li>
+            <li>Fazer engenharia reversa ou copiar o código da plataforma</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>7. Propriedade Intelectual</h3>
+        <p>Todo o conteúdo da plataforma (textos, imagens, logos, código) é propriedade da CoopVale ou de seus licenciadores e está protegido por leis de direitos autorais.</p>
+    </section>
+
+    <section class="mt-4">
+        <h3>8. Limitação de Responsabilidade</h3>
+        <p>A CoopVale não se responsabiliza por:</p>
+        <ul>
+            <li>Qualidade, segurança ou legalidade dos produtos vendidos</li>
+            <li>Danos indiretos, incidentais ou consequenciais</li>
+            <li>Interrupções temporárias do serviço</li>
+        </ul>
+    </section>
+
+    <section class="mt-4">
+        <h3>9. Modificações dos Termos</h3>
+        <p>Reservamos o direito de modificar estes termos a qualquer momento. Mudanças significativas serão comunicadas por email.</p>
+    </section>
+
+    <section class="mt-4">
+        <h3>10. Lei Aplicável</h3>
+        <p>Estes termos são regidos pelas leis brasileiras. Disputas serão resolvidas no foro da comarca de São Paulo, SP.</p>
+    </section>
+
+    <section class="mt-4">
+        <h3>11. Contato</h3>
+        <p>Para dúvidas sobre estes termos:</p>
+        <ul>
+            <li>Email: juridico@coopvale.com.br</li>
+            <li>Telefone: (11) 3456-7890</li>
+        </ul>
+    </section>
+</div>
+{% endblock %}

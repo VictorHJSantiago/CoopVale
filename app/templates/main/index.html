@@ -1,9 +1,56 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="jumbotron mt-4">
-  <h1 class="display-4">Bem-vindo à CoopVale!</h1>
-  <p class="lead">A Cooperativa de Produtores Rurais do Vale Verde conectando você ao melhor da produção local.</p>
-  <hr class="my-4">
-  <a class="btn btn-success btn-lg" href="{{ url_for('produtos_bp.catalogo') }}" role="button">Ver Catálogo</a>
+<div class="container my-5 fade-in">
+  <div class="row mb-5">
+    <div class="col-lg-8 mx-auto text-center">
+      <h1 class="display-4 fw-bold mb-3">Bem-vindo à CoopVale</h1>
+      <p class="lead text-muted mb-4">Conectando produtores locais com consumidores conscientes. Alimentos frescos, saudáveis e sustentáveis direto da origem.</p>
+      <div class="d-flex gap-3 justify-content-center">
+        <a href="{{ url_for('produtos_bp.catalogo') }}" class="btn btn-success btn-lg shadow-sm">Ver Catálogo</a>
+        <a href="{{ url_for('main_bp.sobre') }}" class="btn btn-outline-secondary btn-lg">Sobre Nós</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="card shadow-soft text-center h-100">
+        <div class="card-body">
+          <div class="display-4 mb-3">🌱</div>
+          <h5 class="card-title">Produtos Orgânicos</h5>
+          <p class="card-text text-muted">Alimentos naturais sem agrotóxicos direto dos produtores</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-soft text-center h-100">
+        <div class="card-body">
+          <div class="display-4 mb-3">🚜</div>
+          <h5 class="card-title">Apoio Local</h5>
+          <p class="card-text text-muted">Fortalecendo a agricultura familiar da nossa região</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-soft text-center h-100">
+        <div class="card-body">
+          <div class="display-4 mb-3">📦</div>
+          <h5 class="card-title">Entrega Flexível</h5>
+          <p class="card-text text-muted">Receba em casa ou retire em pontos de coleta</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 text-center">
+      <h3 class="mb-4">Pronto para começar?</h3>
+      {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('auth.register') }}" class="btn btn-success btn-lg shadow-sm">Criar Conta</a>
+      {% else %}
+      <a href="{{ url_for('produtos_bp.catalogo') }}" class="btn btn-success btn-lg shadow-sm">Explorar Produtos</a>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endblock %}

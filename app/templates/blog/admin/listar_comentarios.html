@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Comentários do Blog</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Post</th>
+        <th>Usuário</th>
+        <th>Comentário</th>
+        <th>Data</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in comentarios %}
+      <tr>
+        <td><a href="{{ url_for('blog.ver_post', slug=c.post.slug) }}" target="_blank">{{ c.post.titulo }}</a></td>
+        <td>{{ c.usuario.email }}</td>
+        <td>{{ c.comentario[:80] }}{% if c.comentario|length > 80 %}...{% endif %}</td>
+        <td>{{ c.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('blog.excluir_comentario', id=c.id) }}" onsubmit="return confirm('Excluir este comentário?')" style="display:inline">
+            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center">Nenhum comentário.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ - CoopVale{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Perguntas Frequentes (FAQ)</h1>
+
+    <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    Como faço para me cadastrar?
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Clique em "Registrar" no menu superior e preencha o formulário com seus dados. Você pode se cadastrar como cliente para comprar produtos ou como produtor para vender seus produtos orgânicos.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                    Quais são as formas de pagamento?
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Atualmente aceitamos pagamento via cartão de crédito, débito, PIX e boleto bancário. O pagamento é processado de forma segura através de nossa plataforma.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                    Como funciona a retirada dos produtos?
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Temos diversos pontos de retirada espalhados pela cidade. No momento do checkout você escolhe o ponto mais conveniente. Após a confirmação do pedido, você receberá uma notificação quando o pedido estiver pronto para retirada.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                    Posso cancelar meu pedido?
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Sim, você pode cancelar seu pedido em até 1 hora após a confirmação. Após esse prazo ou se o pedido já estiver em preparo, não será possível cancelar. O estoque será restaurado automaticamente.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                    Os produtos são orgânicos certificados?
+                </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Sim! Todos os nossos produtores seguem práticas orgânicas rigorosas. Muitos possuem certificação orgânica oficial. Cada produto traz informações sobre sua origem e o produtor responsável.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                    Como faço para me tornar um produtor parceiro?
+                </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Entre em contato conosco através do email contato@coopvale.com.br ou registre-se como produtor. Nossa equipe analisará seu perfil e entrará em contato para alinhar os próximos passos.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingSeven">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven">
+                    Como funciona a sazonalidade dos produtos?
+                </button>
+            </h2>
+            <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Produtos sazonais estão disponíveis apenas durante suas épocas de colheita. Você encontrará um selo "Sazonal" nos produtos e as datas de disponibilidade na página de detalhes.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingEight">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight">
+                    Posso avaliar os produtos que comprei?
+                </button>
+            </h2>
+            <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Sim! Após receber seu pedido, você pode avaliar cada produto com nota de 1 a 5 estrelas e deixar um comentário. Suas avaliações ajudam outros clientes e os produtores a melhorar continuamente.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingNine">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine">
+                    Existe pedido mínimo?
+                </button>
+            </h2>
+            <div id="collapseNine" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Algumas categorias podem ter pedido mínimo em valor ou quantidade para viabilizar a logística. Essas informações são exibidas durante o checkout.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

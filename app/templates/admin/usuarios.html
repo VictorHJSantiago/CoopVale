@@ -2,37 +2,45 @@
 {% block content %}
 <div class="container mt-4">
   <h2>Gestão de Usuários</h2>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Email</th>
-        <th>Tipo</th>
-        <th>Ativo</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for usuario in usuarios %}
-      <tr>
-        <td>{{ usuario.id }}</td>
-        <td>{{ usuario.email }}</td>
-        <td>{{ usuario.tipo_usuario }}</td>
-        <td>{{ 'Sim' if usuario.ativo else 'Não' }}</td>
-        <td>
-          {% if not usuario.ativo %}
-          <form action="{{ url_for('admin_bp.ativar_usuario', id=usuario.id) }}" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-sm btn-success">Ativar</button>
-          </form>
-          {% else %}
-          <form action="{{ url_for('admin_bp.desativar_usuario', id=usuario.id) }}" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-sm btn-warning">Desativar</button>
-          </form>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Tipo</th>
+          <th>Ativo</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for usuario in usuarios %}
+        <tr>
+          <td>{{ usuario.id }}</td>
+          <td>{{ usuario.email }}</td>
+          <td><span class="badge badge-info">{{ usuario.tipo_usuario }}</span></td>
+          <td>
+            {% if usuario.ativo %}
+            <span class="badge badge-success">Sim</span>
+            {% else %}
+            <span class="badge badge-danger">Não</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if not usuario.ativo %}
+            <form action="{{ url_for('admin.ativar_usuario', id=usuario.id) }}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-success">Ativar</button>
+            </form>
+            {% else %}
+            <form action="{{ url_for('admin.desativar_usuario', id=usuario.id) }}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-warning">Desativar</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}

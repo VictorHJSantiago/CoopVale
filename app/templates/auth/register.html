@@ -22,6 +22,10 @@
       <label for="nome" class="form-label">Nome</label>
       <input type="text" class="form-control" id="nome" name="nome" required>
     </div>
+    <div class="mb-3">
+      <label for="cpf" class="form-label">CPF</label>
+      <input type="text" class="form-control" id="cpf" name="cpf" required>
+    </div>
     <button type="submit" class="btn btn-success">Cadastrar</button>
     <a href="{{ url_for('auth.login') }}" class="btn btn-link">Já tenho conta</a>
   </form>

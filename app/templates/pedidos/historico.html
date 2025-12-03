@@ -3,28 +3,40 @@
 <div class="container mt-4">
   <h2>Histórico de Pedidos</h2>
   {% if pedidos %}
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Data</th>
-        <th>Status</th>
-        <th>Total</th>
-        <th>Detalhes</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for pedido in pedidos %}
-      <tr>
-        <td>{{ pedido.id }}</td>
-        <td>{{ pedido.data.strftime('%d/%m/%Y %H:%M') }}</td>
-        <td>{{ pedido.status }}</td>
-        <td>R$ {{ '%.2f'|format(pedido.total) }}</td>
-        <td><a href="{{ url_for('pedidos_bp.detalhe_pedido', pedido_id=pedido.id) }}" class="btn btn-sm btn-info">Ver</a></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Detalhes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pedido in pedidos %}
+        <tr>
+          <td>{{ pedido.id }}</td>
+          <td>{{ pedido.data.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td>
+            {% set status_map = {
+              'Aguardando confirmação': 'warning',
+              'Em preparação': 'info',
+              'Pronto para retirada/entrega': 'primary',
+              'Concluído': 'success',
+              'Cancelado': 'danger'
+            } %}
+            {% set badge_class = status_map.get(pedido.status, 'secondary') %}
+            <span class="badge badge-{{ badge_class }}">{{ pedido.status }}</span>
+          </td>
+          <td>R$ {{ '%.2f'|format(pedido.total) }}</td>
+          <td><a href="{{ url_for('pedidos.detalhe_pedido', pedido_id=pedido.id) }}" class="btn btn-sm btn-info">Ver</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% else %}
   <div class="alert alert-info">Nenhum pedido encontrado.</div>
   {% endif %}

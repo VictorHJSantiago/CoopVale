@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Editar Post</h2>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="titulo" class="form-label">Título</label>
+      <input type="text" class="form-control" id="titulo" name="titulo" value="{{ post.titulo }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="categoria" class="form-label">Categoria</label>
+      <select class="form-select" id="categoria" name="categoria">
+        <option value="">--</option>
+        <option value="receitas" {% if post.categoria=='receitas' %}selected{% endif %}>Receitas</option>
+        <option value="dicas" {% if post.categoria=='dicas' %}selected{% endif %}>Dicas</option>
+        <option value="noticias" {% if post.categoria=='noticias' %}selected{% endif %}>Notícias</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="resumo" class="form-label">Resumo</label>
+      <textarea class="form-control" id="resumo" name="resumo" rows="2">{{ post.resumo }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="conteudo" class="form-label">Conteúdo (HTML permitido)</label>
+      <textarea class="form-control" id="conteudo" name="conteudo" rows="8" required>{{ post.conteudo }}</textarea>
+    </div>
+    {% if post.imagem_capa %}
+    <div class="mb-3">
+      <label class="form-label">Imagem de Capa Atual</label><br>
+      <img src="{{ url_for('static', filename=post.imagem_capa) }}" alt="Imagem de capa" class="img-fluid mb-2" style="max-height:200px;">
+    </div>
+    {% endif %}
+    <div class="mb-3">
+      <label for="imagem_capa" class="form-label">Nova Imagem de Capa</label>
+      <input type="file" class="form-control" id="imagem_capa" name="imagem_capa" accept="image/*">
+    </div>
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="publicado" name="publicado" {% if post.publicado %}checked{% endif %}>
+      <label class="form-check-label" for="publicado">Publicado</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{{ url_for('blog.listar_posts') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

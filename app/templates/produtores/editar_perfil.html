@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+  <h2>Editar Perfil do Produtor</h2>
+  <form method="post" enctype="multipart/form-data" class="mt-3">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Nome</label>
+          <input type="text" name="nome" class="form-control" value="{{ produtor.nome }}" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Bio</label>
+          <textarea name="bio" class="form-control" rows="4">{{ produtor.bio }}</textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Endereço</label>
+          <input type="text" name="endereco" class="form-control" value="{{ produtor.endereco }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Cidade</label>
+          <input type="text" name="cidade" class="form-control" value="{{ produtor.cidade }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Estado</label>
+          <input type="text" name="estado" class="form-control" value="{{ produtor.estado }}">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Site</label>
+          <input type="text" name="site" class="form-control" value="{{ produtor.site }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Instagram</label>
+          <input type="text" name="instagram" class="form-control" value="{{ produtor.instagram }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">WhatsApp</label>
+          <input type="text" name="whatsapp" class="form-control" value="{{ produtor.whatsapp }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Foto</label>
+          <input type="file" name="foto" class="form-control" accept="image/*">
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{{ url_for('produtores.dashboard') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

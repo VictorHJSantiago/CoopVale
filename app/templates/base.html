@@ -4,21 +4,30 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{{ titulo }} | CoopVale</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
     <style>
-        .footer { background-color: #f8f9fa; padding: 20px 0; margin-top: 50px; }
-        .nav-link.active { font-weight: bold; color: #1e7e34 !important; }
+        .footer { background-color: #f8f9fa; padding: 24px 0; margin-top: 50px; }
+        .nav-link.active { font-weight: 600; }
     </style>
+    <script>
+        // Initialize theme from localStorage before page renders
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main_bp.index') }}">CoopVale</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('produtos_bp.catalogo') }}">Catálogo</a>
                     </li>
@@ -29,46 +38,65 @@
                         <a class="nav-link" href="{{ url_for('main_bp.produtores') }}">Conheça os Produtores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main_bp.blog') }}">Blog</a>
+                        <a class="nav-link" href="{{ url_for('main_bp.blog_redirect') }}">Blog</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main_bp.contato') }}">Contato</a>
                     </li>
                     {% if current_user.is_authenticated and current_user.tipo_usuario == 'produtor' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('produtores.dashboard') }}">Área do Produtor</a>
+                        <a class="nav-link" href="{{ url_for('produtores.dashboard_home') }}">Área do Produtor</a>
                     </li>
                     {% endif %}
                     {% if current_user.is_authenticated and current_user.tipo_usuario == 'admin' %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_bp.dashboard') }}">Administração</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administração
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminMenu">
+                            <li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin.contatos') }}">Contatos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('pedidos.listar_pontos') }}">Pontos de Retirada</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('pedidos.listar_taxas') }}">Taxas de Entrega</a></li>
+                        </ul>
                     </li>
                     {% endif %}
                     {% if current_user.is_authenticated and current_user.tipo_usuario == 'cliente' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('pedidos_bp.historico') }}">Meus Pedidos</a>
+                        <a class="nav-link" href="{{ url_for('pedidos.historico') }}">Meus Pedidos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('pedidos_bp.carrinho') }}">Carrinho</a>
+                        <a class="nav-link" href="{{ url_for('pedidos.carrinho') }}">Carrinho</a>
                     </li>
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <span class="navbar-text mr-3">
+                        <span class="navbar-text me-3">
                             Olá, {{ current_user.email }} ({{ current_user.tipo_usuario.capitalize() }})
                         </span>
+                    </li>
+                    <li class="nav-item me-2">
+                        <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+                            <span id="themeIcon">🌙</span>
+                        </button>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-sm btn-outline-danger" href="{{ url_for('auth.logout') }}">Sair</a>
                     </li>
                     {% else %}
+                    <li class="nav-item me-2">
+                        <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+                            <span id="themeIcon">🌙</span>
+                        </button>
+                    </li>
                     <li class="nav-item">
                         <a class="btn btn-sm btn-success" href="{{ url_for('auth.login') }}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-sm btn-outline-primary ml-2" href="{{ url_for('auth.register') }}">Cadastro</a>
+                        <a class="btn btn-sm btn-outline-primary ms-2" href="{{ url_for('auth.register') }}">Cadastro</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -82,7 +110,7 @@
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                         {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -93,14 +121,117 @@
         {% block content %}{% endblock %}
     </div>
 
+    <!-- Toast container -->
+    <div aria-live="polite" aria-atomic="true" style="position: fixed; top: 70px; right: 20px; z-index: 9999;">
+        <div id="toastContainer"></div>
+    </div>
+
     <footer class="footer">
-        <div class="container text-center">
-            <span class="text-muted">© 2025 CoopVale. Todos os direitos reservados.</span>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-left">
+                    <span class="text-muted">© 2025 CoopVale. Todos os direitos reservados.</span>
+                </div>
+                <div class="col-md-6 text-center text-md-right">
+                    <a href="{{ url_for('main_bp.faq') }}" class="text-muted mr-3">FAQ</a>
+                    <a href="{{ url_for('main_bp.privacidade') }}" class="text-muted mr-3">Privacidade</a>
+                    <a href="{{ url_for('main_bp.termos') }}" class="text-muted">Termos de Uso</a>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fallback loader if Bootstrap CSS/JS fails to load
+        (function() {
+            try {
+                var root = getComputedStyle(document.documentElement);
+                var hasBs = root.getPropertyValue('--bs-primary');
+                if (!hasBs || hasBs.trim() === '') {
+                    var altCss = document.createElement('link');
+                    altCss.rel = 'stylesheet';
+                    altCss.href = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css';
+                    document.head.appendChild(altCss);
+                }
+            } catch (e) {}
+
+            if (typeof window.bootstrap === 'undefined') {
+                var altJs = document.createElement('script');
+                altJs.src = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js';
+                document.body.appendChild(altJs);
+            }
+        })();
+    </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var tokenMeta = document.querySelector('meta[name="csrf-token"]');
+                var token = tokenMeta ? tokenMeta.getAttribute('content') : null;
+                if (!token) return;
+                document.querySelectorAll('form').forEach(function(form){
+                    if ((form.method || '').toLowerCase() === 'post'){
+                        if (!form.querySelector('input[name="csrf_token"]')){
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'csrf_token';
+                            input.value = token;
+                            form.appendChild(input);
+                        }
+                    }
+                });
+            });
+
+            // Toast notification utility
+            window.showToast = function(message, type) {
+                type = type || 'success';
+                var bgClass = 'bg-success';
+                if (type === 'danger' || type === 'error') bgClass = 'bg-danger';
+                else if (type === 'warning') bgClass = 'bg-warning';
+                else if (type === 'info') bgClass = 'bg-info';
+
+                var toastHTML = `
+                    <div class="toast ${bgClass} text-white" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+                        <div class="toast-header ${bgClass} text-white">
+                            <strong class="mr-auto">Notificação</strong>
+                            <button type="button" class="ml-2 mb-1 close text-white" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                    </div>
+                `;
+                var container = document.getElementById('toastContainer');
+                container.insertAdjacentHTML('beforeend', toastHTML);
+                var toastElement = container.lastElementChild;
+                var toast = new bootstrap.Toast(toastElement);
+                toast.show();
+                toastElement.addEventListener('hidden.bs.toast', function() {
+                    toastElement.remove();
+                });
+            };
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            function updateThemeIcon(theme) {
+                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+            
+            // Set initial icon
+            updateThemeIcon(document.documentElement.getAttribute('data-theme'));
+            
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    updateThemeIcon(newTheme);
+                });
+            }
+        </script>
 </body>
 </html>

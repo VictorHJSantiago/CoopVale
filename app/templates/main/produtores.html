@@ -1,7 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
-  <h2>Conheça os Produtores</h2>
-  <p>Em breve, você poderá conhecer a história e os produtos de cada produtor da CoopVale!</p>
+  <h2>Conheça os Produtores da CoopVale</h2>
+  <p class="lead mb-4">Famílias dedicadas a trazer o melhor do campo para a sua mesa.</p>
+  <form method="GET" class="row g-2 mb-3">
+    <div class="col-md-4">
+      <input type="text" name="q" class="form-control" placeholder="Buscar por nome ou cidade" value="{{ request.args.get('q','') }}">
+    </div>
+    <div class="col-md-3">
+      <input type="text" name="cidade" class="form-control" placeholder="Cidade" value="{{ request.args.get('cidade','') }}">
+    </div>
+    <div class="col-md-3">
+      <input type="text" name="estado" class="form-control" placeholder="Estado" value="{{ request.args.get('estado','') }}">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100" type="submit">Filtrar</button>
+    </div>
+  </form>
+  
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+    {% for produtor in produtores %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        {% set foto = produtor.fotos.split(',')[0] if produtor.fotos %}
+        <img src="{{ url_for('static', filename=foto if foto else 'images/placeholders/produtor.jpg') }}" class="card-img-top" alt="{{ produtor.nome }}">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title d-flex align-items-center justify-content-between">
+            <span>{{ produtor.nome }}</span>
+            {% if produtor.certificacoes %}
+              <span class="badge bg-success">Certificado</span>
+            {% endif %}
+          </h5>
+          {% if produtor.endereco %}<p class="mb-1 text-muted small">{{ produtor.endereco }}</p>{% endif %}
+          {% if produtor.descricao %}<p class="flex-grow-1">{{ produtor.descricao }}</p>{% endif %}
+          {% if produtor.certificacoes %}
+            <p class="small mb-2"><strong>Certificações:</strong> {{ produtor.certificacoes }}</p>
+          {% endif %}
+          <div class="mt-auto d-flex gap-2">
+            <a href="{{ url_for('produtos_bp.catalogo', produtor=produtor.nome) }}" class="btn btn-outline-success btn-sm">Ver Produtos</a>
+            <a href="{{ url_for('produtores.perfil_publico', produtor_id=produtor.id) }}" class="btn btn-primary btn-sm">Ver Perfil</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+      <div class="alert alert-info">Nenhum produtor cadastrado publicamente no momento.</div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
